@@ -1,0 +1,7 @@
+from django.contrib import admin
+from .models import Pet
+
+class PetAdmin(admin.ModelAdmin):
+    list_display = ('name', 'type_of_pet', 'breed', 'age', 'pet_parent_name', 'pet_parent_contact', 'primary_vet', 'primary_vet_contact', 'secondary_vet', 'secondary_vet_contact', 'created_at', 'updated_at')
+
+admin.site.register(Pet, PetAdmin)
