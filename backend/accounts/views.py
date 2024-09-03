@@ -1,19 +1,17 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import UserSerializer
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def registerUser(request):
     """
     Create a new user.
     """
-
-    if request.user.is_authenticated:
-        return Response({'detail': 'You are already logged in and cannot register a new user.'}, status=status.HTTP_403_FORBIDDEN)
-
     if request.method == 'POST':
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
