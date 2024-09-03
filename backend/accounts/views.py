@@ -10,6 +10,10 @@ def registerUser(request):
     """
     Create a new user.
     """
+
+    if request.user.is_authenticated:
+        return Response({'detail': 'You are already logged in and cannot register a new user.'}, status=status.HTTP_403_FORBIDDEN)
+
     if request.method == 'POST':
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
