@@ -1,4 +1,4 @@
-.footer {
+/* .footer {
     background-color: #333;
     color: white;
     padding: 2rem 0;
@@ -32,4 +32,64 @@
   
   .quick-links a:hover {
     text-decoration: underline;
+} */
+
+/* Footer Styling */
+.footer {
+  background-color: #fdf1f5; /* Light pink background color */
+  padding: 40px 20px;
+  box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+  border-top: 1px solid var(--accent-color); /* Accent color border */
+  text-align: center;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.contact, .quick-links {
+  max-width: 300px;
+}
+
+.contact h3, .quick-links h3 {
+  font-size: 1.5rem;
+  color: var(--accent-color); /* Accent color */
+  margin-bottom: 10px;
+}
+
+.contact p, .quick-links a {
+  font-size: 1rem;
+  color: #333;
+  margin: 5px 0;
+}
+
+.quick-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quick-links a {
+  color: #333;
+}
+
+.quick-links a:hover {
+  text-decoration: underline;
+  color: var(--accent-color); /* Accent color on hover */
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
+  .footer-content {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .contact, .quick-links {
+    max-width: none;
+    text-align: left;
+  }
 }
