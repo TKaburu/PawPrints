@@ -26,10 +26,13 @@ def pets(request):
     else:
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
+
 @api_view(['GET', 'PUT', 'DELETE'])
 def pet_detail(request, slug):
     """
     This function retrieves, updates, or deletes a pet instance.
+    args:
+        slug: str
     """
     try:
         pet = Pet.objects.get(slug=slug)
@@ -50,3 +53,27 @@ def pet_detail(request, slug):
         return Response(status=status.HTTP_204_NO_CONTENT)
     else:
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    
+
+@api_view(['GET'])
+def petSearch(request, search):
+    """
+    This function searches for a pet by name.
+    args:
+        search: str
+    """
+    if request.method == 'GET':
+        if search:
+            pets = Pet.objects.filter(microchip_no__icontains=search)
+            if pets.exists():
+                serializer = PetSerializer(pets, many=True)
+                return Response(serializer.data)
+            else:
+                return Response(
+                    {'error': 'No pet with that number found'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response(
+                {'error': 'Please provide a microchip number'}, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({'error': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
