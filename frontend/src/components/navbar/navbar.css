@@ -1,30 +1,95 @@
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background-color: #333;
-    color: white;
-}
-  
-  .logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-}
-  
-  .links, .auth {
-    display: flex;
-    gap: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background-color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 10px 20px;
 }
 
-.links a, .auth a {
-    color: white;
-    text-decoration: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    transition: background-color 0.3s;
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--accent-color);
 }
-  
-  .links a:hover, .auth a:hover {
-    background-color: #555;
+
+.links {
+  display: flex;
+  gap: 20px;
+}
+
+
+.links a {
+  color: var(--text-color);
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.links a:hover {
+  color: var(--accent-color);
+}
+
+.auth {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.auth a {
+  color: var(--text-color);
+  /* padding: 8px 12px; */
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+}
+
+.auth a.accent {
+  color: #fff;
+}
+
+.menu-icon {
+  display: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+@media (max-width: 768px) {
+  /* Hide links section on small screens by default */
+  .links {
+    display: none;
+  }
+
+  .menu-icon {
+    display: flex;
+  }
+
+  .links.open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background-color: #ffffff;
+    width: 100%;
+    height: calc(100vh - 60px);
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+
+  .links a {
+    margin: 10px 0;
+    font-size: 1.2rem;
+  }
+
+  .auth {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
