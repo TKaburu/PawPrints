@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Cookies from 'js-cookie';
-import api from '../../api';
+import api from '../../api/api';
 import { useNavigate } from 'react-router-dom';
 import { ACCESS_TOKEN, REFRESH_TOKEN} from '../../constants';
 import './form.css';
@@ -48,8 +48,11 @@ const Form = ({route, method}) => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <h1>{title}</h1>
+        <section className="form-container">
+            <form onSubmit={handleSubmit}>
+            <div className="title">
+                <h1>{title}</h1>
+            </div>
             {method === "register" && (
                 <>
                     <div>
@@ -98,6 +101,7 @@ const Form = ({route, method}) => {
                 {Loading ? "Loading..." : title}
             </button>       
         </form>
+        </section>
     );
 };
 
