@@ -1,8 +1,21 @@
 import React from 'react'
+import PetSearch from '../petSearch/PetSearch'
+import KpcaHero from '../kpcaHero/KpcaHero'
 
 const Home = () => {
   return (
-    <div>home</div>
+    <>
+    <section className="home-container">
+      <div className="title">
+        <h1>Home</h1>
+      </div>
+      <div className='search-pet'>
+        <PetSearch />
+      </div>
+      <KpcaHero />
+    </section>
+    
+    </>
   )
 }
 
