@@ -54,6 +54,15 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# ---------------------------------------- CUSTOM USER ----------------------------------------
+
+AUTH_USER_MODEL = 'accounts.CustomUser'
+
+# AUTHENTICATION_BACKENDS = [
+#     'django.contrib.auth.backends.ModelBackend',
+# ]
+
+
 # ---------------------------------------- REST FRAMEWORK SETTINGS ----------------------------------------
 
 REST_FRAMEWORK = {

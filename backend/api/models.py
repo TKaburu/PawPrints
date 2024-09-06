@@ -1,7 +1,7 @@
-from django.contrib.auth.models import User
 from django.db import models
 from django.utils.text import slugify
 from django.utils.crypto import get_random_string
+from accounts.models import CustomUser
 
 class Pet(models.Model):
     """
@@ -27,7 +27,7 @@ class Pet(models.Model):
     breed = models.CharField(max_length=100)
     slug = models.SlugField(unique=True, blank=True, null=True)
     age = models.IntegerField()
-    pet_parent_name = models.ForeignKey(User, on_delete=models.CASCADE)
+    pet_parent_name = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     pet_parent_contact = models.CharField(max_length=100)
     primary_vet = models.CharField(max_length=100)
     primary_vet_contact = models.CharField(max_length=100)
