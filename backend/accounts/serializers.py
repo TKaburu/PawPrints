@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from .models import CustomUser
 from rest_framework import serializers
 
 
@@ -9,8 +9,8 @@ class UserSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True)
 
     class Meta:
-        model = User
-        fields = ['id', 'username', 'email', 'password', 'confirm_password']
+        model = CustomUser
+        fields = ['id', 'first_name', 'last_name', 'username', 'email', 'user_type', 'password', 'confirm_password']
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -28,13 +28,14 @@ class UserSerializer(serializers.ModelSerializer):
         Creates a new user
         """
         validated_data.pop('confirm_password')
-        user = User(
+        user = CustomUser(
             username=validated_data['username'],
-            email=validated_data['email']
+            email=validated_data['email'],
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name'],
+            user_type=validated_data['user_type']
         )
         user.set_password(validated_data['password'])  # This is the line that hashes the password
         user.save()
         return user
-
-
 
