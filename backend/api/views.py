@@ -81,6 +81,31 @@ def petSearch(request, search):
     else:
         return Response({'error': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
+# ------------------------------- Pet Ownership Views ------------------------------- # 
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def transferPetOwnership(request, slug):
+    """
+    Transfer the ownership of a pet to a new owner.
+    """
+    try:
+        pet = Pet.objects.get(slug=slug)
+        new_owner_username = request.data.get('new_owner_username')
+        new_owner = CustomUser.objects.get(username=new_owner_username)
+    except Pet.DoesNotExist:
+        return Response({'error': 'Pet not found.'}, status=status.HTTP_404_NOT_FOUND)
+    except CustomUser.DoesNotExist:
+        return Response({'error': 'New owner not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+    if pet.pet_parent_name != request.user:
+        return Response({'error': 'You are not the owner of this pet.'}, status=status.HTTP_403_FORBIDDEN)
+
+    pet.pet_parent_name = new_owner
+    pet.save()
+
+    serializer = PetSerializer(pet)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 # ------------------------------- Dashboard Views ------------------------------- #
 @api_view(['GET'])

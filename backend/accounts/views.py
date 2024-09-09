@@ -82,3 +82,10 @@ def pet_owner_dashboard(request, username):
     serializer = PetSerializer(pets, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+@api_view(['GET'])
+def checkUserExists(request):
+    username = request.GET.get('username')
+    if CustomUser.objects.filter(username=username).exists():
+        return Response({"exists": True}, status=status.HTTP_200_OK)
+    return Response({"exists": False}, status=status.HTTP_404_NOT_FOUND)

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../../api/api';
 import { ACCESS_TOKEN } from '../../constants';
 import { useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const PetOwnerDashboard = () => {
   const [pets, setPets] = useState([]);
@@ -46,14 +47,10 @@ const PetOwnerDashboard = () => {
         {pets.map(Pet => (
           <div className="pet-card" key={Pet.id}>
             {/* <img src={Pet.image} alt={Pet.name} /> */}
-            <h2>{Pet.name}</h2>
+            <Link to={`/transfer-pet-ownership/${Pet.slug}`}><h2>{Pet.name}</h2></Link>
+            <p>Microchip Number: {Pet.microchip_number}</p>
             <p>Type of Pet: {Pet.type_of_pet}</p>
             <p>Breed: {Pet.breed}</p>
-            {/* <p>Date of Birth: {Pet.date_of_birth}</p>
-            <p>Gender: {Pet.gender}</p>
-            <p>Color: {Pet.color}</p>
-            <p>Weight: {Pet.weight}</p>
-            <p>Height: {Pet.height}</p> */}
             
           </div>
         ))}
