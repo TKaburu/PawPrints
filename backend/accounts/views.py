@@ -8,6 +8,7 @@ from rest_framework import status
 from .serializers import UserSerializer
 from api.models import Pet
 from api.serializers import PetSerializer
+from .models import CustomUser
 
 User = get_user_model()
 
@@ -35,36 +36,49 @@ def getUser(request):
     serializer = UserSerializer(user)
     return Response(serializer.data)
 
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+# def userProfile(request, username):
+#     """
+#     View for user profile, adapting based on user type.
+#     """
+#     profile_user = get_object_or_404(User, username=username)
+#     user_serializer = UserSerializer(profile_user)
+    
+#     if profile_user.user_type == 'Pet Owner':
+#         pets = Pet.objects.filter(owner=profile_user)
+#         pet_serializer = PetSerializer(pets, many=True)
+#         profile_data = {
+#             'user': user_serializer.data,
+#             'pets': pet_serializer.data,
+#             'pet_count': pets.count()
+#         }
+#     elif profile_user.user_type == 'Vet':
+#         pets = Pet.objects.filter(vet=profile_user)
+#         pet_serializer = PetSerializer(pets, many=True)
+#         profile_data = {
+#             'user': user_serializer.data,
+#             'pets_under_care': pet_serializer.data,
+#             'pets_count': pets.count()
+#         }
+#     else:
+#         return Response({'error': 'Invalid user type'}, status=status.HTTP_400_BAD_REQUEST)
+    
+#     return Response(profile_data, status=status.HTTP_200_OK)
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def userProfile(request, username):
+def pet_owner_dashboard(request, username):
     """
-    View for user profile, adapting based on user type.
+    Retrieve the list of pets for a specific user by username.
     """
-    profile_user = get_object_or_404(User, username=username)
-    user_serializer = UserSerializer(profile_user)
-    
-    if profile_user.user_type == 'Pet Owner':
-        pets = Pet.objects.filter(owner=profile_user)
-        pet_serializer = PetSerializer(pets, many=True)
-        profile_data = {
-            'user': user_serializer.data,
-            'pets': pet_serializer.data,
-            'pet_count': pets.count()
-        }
-    elif profile_user.user_type == 'Vet':
-        pets = Pet.objects.filter(vet=profile_user)
-        pet_serializer = PetSerializer(pets, many=True)
-        profile_data = {
-            'user': user_serializer.data,
-            'pets_under_care': pet_serializer.data,
-            'pets_count': pets.count()
-        }
-    else:
-        return Response({'error': 'Invalid user type'}, status=status.HTTP_400_BAD_REQUEST)
-    
-    return Response(profile_data, status=status.HTTP_200_OK)
-
-
-
+    user = get_object_or_404(CustomUser, username=username)
+    # if request.user.username != user.username:
+    #     return Response({"detail": "You do not have permission to view this data."}, status=status.HTTP_403_FORBIDDEN)
+    if username == 'undefined' or not username:
+        username =  request.user.username
+    pets = Pet.objects.filter(pet_parent_name=user)
+    serializer = PetSerializer(pets, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
