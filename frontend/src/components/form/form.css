@@ -61,6 +61,16 @@ button:disabled {
   color: #a0a0a0;
 }
 
+.form-footer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.form-footer a {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
 .alert {
   color: #dc3545;
   text-align: center;
