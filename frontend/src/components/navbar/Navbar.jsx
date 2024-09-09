@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FaTimes, FaBars } from 'react-icons/fa';
+import { FaTimes, FaBars, FaUser } from 'react-icons/fa'; // Import FaUser for user icon
 import api from '../../api/api';
 import { ACCESS_TOKEN } from '../../constants';
 import './navbar.css';
@@ -35,6 +35,7 @@ const Navbar = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+
   return (
     <nav className="navbar">
       <section className="logo">
@@ -49,17 +50,24 @@ const Navbar = () => {
       <section className={`links ${isMenuOpen ? 'open' : ''}`}>
         {isLoggedIn ? (
           <div className="auth">
-            <span>Welcome, {username}!</span>
-            <button><Link to="/logout" className='accent'>Logout</Link></button>
+            <div className="welcome-msg">
+              Welcome, {username}
+            </div>
+            <div className="user-icon-container">
+              <FaUser className="user-icon" />
+              <div className="logout-menu">
+                <Link to={`/${username}`}>Dashboard</Link>
+                <Link to="/logout">Logout</Link>
+              </div>              
+            </div>
           </div>
         ) : (
           <div className="auth">
             <Link to="/login">Login</Link>
-            <button><Link to="/register" className='accent'>Register</Link></button>
+            <button><Link to="/register">Register</Link></button>
           </div>
         )}
       </section>
-      
       <div className="menu-icon" onClick={toggleMenu}>
         {isMenuOpen ? <FaTimes /> : <FaBars />}
       </div>

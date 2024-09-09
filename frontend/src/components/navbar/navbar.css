@@ -10,6 +10,7 @@
   left: 0;
   z-index: 1000;
   padding: 10px 20px;
+  height: 60px;
 }
 
 
@@ -37,19 +38,15 @@
 
 .auth {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 15px;
+  gap: 30px;
 }
 
-.auth a {
-  color: var(--text-color);
-  /* padding: 8px 12px; */
+.auth button a {
+  color: #ffffff;
   border-radius: 4px;
-  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
-}
-
-.auth a.accent {
-  color: #fff;
+  transition: background-color 0.3s ease; /*Smooth transition*/
 }
 
 .menu-icon {
@@ -59,8 +56,45 @@
   color: var(--text-color);
 }
 
+.user-icon-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  color: var(--accent-color);
+}
+
+.user-icon {
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+
+.logout-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ffffff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.user-icon-container:hover .logout-menu {
+  display: flex;
+  flex-direction: column;
+}
+
+.logout-menu a {
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.logout-menu a:hover {
+  color: var(--accent-color);
+}
+
 @media (max-width: 768px) {
-  /* Hide links section on small screens by default */
   .links {
     display: none;
   }
