@@ -1,45 +1,8 @@
-/* .footer {
-    background-color: #333;
-    color: white;
-    padding: 2rem 0;
-    display: flex;
-    justify-content: space-around;
-    align-items: flex-start;
-}
-  
-  .footer-content {
-    display: flex;
-    justify-content: space-between;
-    width: 80%;
-}
-  
-  .contact, .quick-links {
-    flex: 1;
-    margin: 0 1rem;
-}
-  
-  .contact h3, .quick-links h3 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-}
-
-  .contact p, .quick-links a {
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-    color: white;
-    text-decoration: none;
-}
-  
-  .quick-links a:hover {
-    text-decoration: underline;
-} */
-
-/* Footer Styling */
 .footer {
-  background-color: #fdf1f5; /* Light pink background color */
+  background-color: #fdf1f5;
   padding: 40px 20px;
   box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
-  border-top: 1px solid var(--accent-color); /* Accent color border */
+  border-top: 1px solid var(--accent-color);
   text-align: center;
 }
 
