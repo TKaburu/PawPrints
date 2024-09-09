@@ -5,10 +5,7 @@ import KpcaHero from '../kpcaHero/KpcaHero'
 const Home = () => {
   return (
     <>
-    <section className="home-container">
-      <div className="title">
-        <h1>Home</h1>
-      </div>
+    <section className="main-content">
       <div className='search-pet'>
         <PetSearch />
       </div>
@@ -16,7 +13,7 @@ const Home = () => {
     </section>
     
     </>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

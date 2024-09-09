@@ -25,7 +25,7 @@ const PetSearch = () => {
     };
 
     return (
-        <div>
+        <div className='main-content'>
             <section className="search-container">
                 <div className="title">
                     <h1>Search Pet By Microchip</h1>
@@ -52,10 +52,10 @@ const PetSearch = () => {
                                 {result.map((pet, index) => (
                                     <div key={index}>
                                     <p>Name: {pet.name}</p>
-                                    <p>Type: {pet.type_of_pet}</p>
+                                    <p>Pet Type: {pet.type_of_pet}</p>
                                     <p>Breed: {pet.breed}</p>
                                     <p>Age: {pet.age} {pet.age === 1 ? 'Year' : 'Years'}</p>
-                                    <p>Owner: {pet.pet_parent_name.username}</p>
+                                    <p>Owner: {pet.pet_parent_name.first_name} {pet.pet_parent_name.last_name}</p>
                                     <p>Primary Vet: {pet.primary_vet}</p>
                                     <p>Primary Vet Contact: {pet.primary_vet_contact}</p>
                                     {pet.secondary_vet && <p>Secondary Vet: {pet.secondary_vet}</p>}

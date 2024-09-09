@@ -9,6 +9,7 @@ const RegisterPet = () => {
     const [typeOfPet, setTypeOfPet] = useState('');
     const [breed, setBreed] = useState('');
     const [age, setAge] = useState('');
+    const [petparentcontact, setPetparentcontact] = useState('');
     const [primaryVet, setPrimaryVet] = useState('');
     const [primaryVetContact, setPrimaryVetContact] = useState('');
     const [secondaryVet, setSecondaryVet] = useState('');
@@ -19,12 +20,13 @@ const RegisterPet = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await api.post('/api/pets/', {
+            const response = await api.post('/api/', {
                 name,
                 microchip_no: microchipNo,
                 type_of_pet: typeOfPet,
                 breed,
                 age,
+                pet_parent_contact:petparentcontact,
                 primary_vet: primaryVet,
                 primary_vet_contact: primaryVetContact,
                 secondary_vet: secondaryVet,
@@ -38,20 +40,21 @@ const RegisterPet = () => {
             setSuccess('Pet registered successfully!');
             setError('');
         } catch (err) {
+            console.error('Error details:', err.response?.data || err.message);
             setError('An error occurred while registering the pet.');
             setSuccess('');
         }
     };
 
     return (
-        <section className="form-container">
+        <section className="main-content">
             <form onSubmit={handleSubmit}>
                 <div className="title">
                     <h1>Register a New Pet</h1>
                 </div>
                 <div>
                     <input
-                        className="form-input"
+                        className=""
                         type="text"
                         placeholder="Pet Name"
                         value={name}
@@ -60,7 +63,7 @@ const RegisterPet = () => {
                 </div>
                 <div>
                     <input
-                        className="form-input"
+                        className=""
                         type="text"
                         placeholder="Microchip Number"
                         value={microchipNo}
@@ -69,7 +72,7 @@ const RegisterPet = () => {
                 </div>
                 <div>
                     <input
-                        className="form-input"
+                        className=""
                         type="text"
                         placeholder="Type of Pet"
                         value={typeOfPet}
@@ -78,7 +81,7 @@ const RegisterPet = () => {
                 </div>
                 <div>
                     <input
-                        className="form-input"
+                        className=""
                         type="text"
                         placeholder="Breed"
                         value={breed}
@@ -87,7 +90,7 @@ const RegisterPet = () => {
                 </div>
                 <div>
                     <input
-                        className="form-input"
+                        className=""
                         type="number"
                         placeholder="Age"
                         value={age}
@@ -96,7 +99,16 @@ const RegisterPet = () => {
                 </div>
                 <div>
                     <input
-                        className="form-input"
+                        className=""
+                        type="text"
+                        placeholder="Pet Parent Contact"
+                        value={petparentcontact}
+                        onChange={(e) => setPetparentcontact(e.target.value)}
+                    />
+                </div>
+                <div>
+                    <input
+                        className=""
                         type="text"
                         placeholder="Primary Vet"
                         value={primaryVet}
@@ -105,7 +117,7 @@ const RegisterPet = () => {
                 </div>
                 <div>
                     <input
-                        className="form-input"
+                        className=""
                         type="text"
                         placeholder="Primary Vet Contact"
                         value={primaryVetContact}
@@ -114,7 +126,7 @@ const RegisterPet = () => {
                 </div>
                 <div>
                     <input
-                        className="form-input"
+                        className=""
                         type="text"
                         placeholder="Secondary Vet (optional)"
                         value={secondaryVet}
@@ -123,7 +135,7 @@ const RegisterPet = () => {
                 </div>
                 <div>
                     <input
-                        className="form-input"
+                        className=""
                         type="text"
                         placeholder="Secondary Vet Contact (optional)"
                         value={secondaryVetContact}
