@@ -1,5 +1,5 @@
 import React from "react";
-import kpcaLogo from "../../assets/kpca-logo.png";
+import kpcaLogo from "../../assets/images/kpca-logo.png";
 import "./kpcaHero.css";
 
 const KpcaHero = () => {
@@ -34,7 +34,7 @@ const KpcaHero = () => {
             animal welfare charity organization in Kenya that deals for the most
             part with domestic animals. It is the only animal welfare
             organization that runs an animal shelter in Kenya. The society has
-            branches in Nairobi, Mombasa and Naivasha.
+            branches in Nairobi, Mombasa, Naivasha and Nanyuki.
           </p>
         </section>
       </section>

@@ -1,30 +1,34 @@
-import React from 'react'
-import { Link } from 'react-router-dom';
-import './footer.css'
+import React from "react";
+import { Link } from "react-router-dom";
+import "./footer.css";
 
 const Footer = () => {
   return (
-    <div className='main-content'>
-      <section className='footer'>
-          <section className='footer-content'>
-              <div className='contact'>
-                  <h3>Contact</h3>
-                  <p>123-456-7890</p>
-                  <p> Email: email adreess </p>
-              </div>
-              <div className='quick-links'>
-                  <h3>Quick Links</h3>
-                  <Link to="/register-pet">Register a Pet</Link>
-                  <a href="/about">Change Ownership</a>
-                  <a href="/search">Microchip Search</a>
-                  <a href="/contact">Contact</a>
-              </div>
-              
-
-          </section>        
+    <section className="footer">
+      <section className="footer-headers">
+        <h3>Contact</h3>
+        <h3>Quick Links</h3>
+        <h3>Legal</h3>
       </section>
-    </div>
-  )
-}
+      <section className="footer-content">
+        <div className="contact">
+          <p>123-456-7890</p>
+          <p>Email: email address</p>
+        </div>
+        <section className="quick-links">
+          <Link to="/search">Microchip Search</Link>
+          <Link to="/register-pet">Register a Pet</Link>
+          <Link to="#">Change Ownership</Link>
+          <Link to="#">Contact</Link>
+        </section>
+        <section className="legal">
+          <Link to="#">Terms of Service</Link>
+          <Link to="#">Privacy Policy</Link>
+          <Link to="#">Cookies Policy</Link>
+        </section>
+      </section>
+    </section>
+  );
+};
 
-export default Footer
+export default Footer;

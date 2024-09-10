@@ -4,6 +4,8 @@
   --accent-color: #ee8e46;
   --accent-color-dark: #df701b;
   --text-color: #333;
+  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --button-text-color: #fff;
 }
 
 * {

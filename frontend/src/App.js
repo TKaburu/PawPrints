@@ -36,8 +36,8 @@ const Layout = () => {
 
   return (
     <>
-      {/* <Navbar /> */}
-      {!hideNavbarRoutes.includes(location.pathname) && <Navbar />}
+      <Navbar />
+      {/* {!hideNavbarRoutes.includes(location.pathname) && <Navbar />} */}
       <section className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -74,8 +74,8 @@ const Layout = () => {
           
         </Routes>
       </section>
-      {!hideNavbarRoutes.includes(location.pathname) && <Footer />}
-      {/* <Footer /> */}
+      {/* {!hideNavbarRoutes.includes(location.pathname) && <Footer />} */}
+      <Footer />
     </>
   );
 };

@@ -1,58 +1,59 @@
 .footer {
-  background-color: #fdf1f5;
-  padding: 40px 20px;
-  box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
-  border-top: 1px solid var(--accent-color);
+  background-color: #ffffff;
+  box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 -2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 20px;
+  margin-top: 50px;
+}
+
+.footer-headers {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.footer-headers h3 {
+  flex: 1;
   text-align: center;
+  color: var(--accent-color);
 }
 
 .footer-content {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
+  justify-content: space-between;
 }
 
-.contact, .quick-links {
-  max-width: 300px;
-}
-
-.contact h3, .quick-links h3 {
-  font-size: 1.5rem;
-  color: var(--accent-color); /* Accent color */
-  margin-bottom: 10px;
-}
-
-.contact p, .quick-links a {
-  font-size: 1rem;
-  color: #333;
-  margin: 5px 0;
-}
-
-.quick-links {
+.footer-content > div,
+.footer-content > section {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  align-items: center;
 }
 
-.quick-links a {
-  color: #333;
+.contact p,
+.quick-links a,
+.legal a {
+  margin-bottom: 10px;
+  color: #666;
+  text-decoration: none;
 }
 
-.quick-links a:hover {
+.quick-links a:hover,
+.legal a:hover {
   text-decoration: underline;
-  color: var(--accent-color); /* Accent color on hover */
+  color: var(--accent-color);
 }
 
-/* Responsive Design */
-@media (min-width: 768px) {
+@media (max-width: 768px) {
+  .footer-headers,
   .footer-content {
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column;
   }
 
-  .contact, .quick-links {
-    max-width: none;
-    text-align: left;
+  .footer-headers h3,
+  .footer-content > div,
+  .footer-content > section {
+    margin-bottom: 20px;
   }
 }
