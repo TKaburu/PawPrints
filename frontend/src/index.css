@@ -1,4 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap");
+@import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css";
+
 :root {
   --bg-color: #fdf1f5;
   --accent-color: #ee8e46;
@@ -38,32 +41,6 @@ button {
   font-size: 16px;
   cursor: pointer;
 }
-
-/* form {
-  display: flex;
-  flex-direction: column;
-  width: fi;
-}
-
-label {
-  font-weight: 500;
-  margin-bottom: 8px;
-}
-
-input[type="text"] {
-  padding: 10px;
-  border-radius: 4px;
-  font-size: 16px;
-  margin-bottom: 10px;
-  transition: border-color 0.3s;
-}
-
-
-input[type="text"]:focus {
-  border-color: var(--accent-color);
-  outline: none;
-} */
-
 
 .title {
   font-family: "Poppins", sans-serif;
