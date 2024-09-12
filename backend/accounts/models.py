@@ -9,6 +9,7 @@ class CustomUser(AbstractUser):
     USER_TYPE = (
         ('pet_owner', 'Pet Owner'),
         ('vet', 'Vet'),
+        ('welfare', 'Welfare'),
 
     )
     email = models.EmailField()
