@@ -13,12 +13,12 @@ class Pet(models.Model):
         ('Cat', 'Cat'),
         ('Bird', 'Bird'),
         ('Horse', 'Horse'),
-        ('Cow', 'Fish'),
+        ('Cow', 'Cow'),
+        ('Fish', 'Fish'),
         ('Goat', 'Goat'),
         ('Sheep', 'Sheep'),
         ('Snake', 'Snake'),
         ('Rabbit', 'Rabbit'),
-        ('Sheep', 'Sheep'),
         ('Other', 'Other'),
     )
     microchip_no = models.CharField(max_length=100)
@@ -27,11 +27,17 @@ class Pet(models.Model):
     breed = models.CharField(max_length=100)
     slug = models.SlugField(unique=True, blank=True, null=True)
     age = models.IntegerField()
-    pet_parent_name = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    pet_parent_name = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='owned_pets')
     pet_parent_contact = models.CharField(max_length=100)
-    primary_vet = models.CharField(max_length=100)
+    primary_vet = models.ForeignKey(
+        CustomUser, on_delete=models.SET_NULL, null=True,
+        blank=True, related_name='primary_vets'
+        )
     primary_vet_contact = models.CharField(max_length=100)
-    secondary_vet = models.CharField(max_length=100, blank=True, null=True)
+    secondary_vet = models.ForeignKey(
+        CustomUser, on_delete=models.SET_NULL, null=True,
+        blank=True, related_name='secondary_vets'
+        )
     secondary_vet_contact = models.CharField(max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -46,4 +52,3 @@ class Pet(models.Model):
                 slug = slug + '-' + get_random_string(5)
             self.slug = slug
         super(Pet, self).save(*args, **kwargs)
-

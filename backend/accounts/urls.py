@@ -12,7 +12,8 @@ urlpatterns = [
 
     # ------------------------------- Profile URLs ------------------------------- #
     path('get-user/', getUser, name='get-user'),
-    # path('profile/<str:username>/', userProfile, name='user_profile'),
+    path('user-dashboard/', userDashboard, name='user_dashboard'),
+    path('profile/', userProfile, name='user_profile'),
     path('pet-owner-dashboard/<str:username>/', pet_owner_dashboard, name='pet_owner_dashboard'),
     path('check-user/', checkUserExists, name='check_user_exists'),
 

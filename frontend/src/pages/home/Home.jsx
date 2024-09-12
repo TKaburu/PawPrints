@@ -1,11 +1,9 @@
 import React from 'react'
 import PetSearch from '../petSearch/PetSearch'
-import AboutPawPrints from '../aboutPawPrints/AboutPawPrints'
-import KpcaHero from '../kpcaHero/KpcaHero'
-import ReunificationStories from '../reunificationStories/ReunificationStories'
-import WhyPawPrints from '../whyPawPrints/WhyPawPrints'
-
-
+import AboutPawPrints from '../../components/aboutPawPrints/AboutPawPrints'
+import KpcaHero from '../../components/kpcaHero/KpcaHero'
+import ReunificationStories from '../../components/reunificationStories/ReunificationStories'
+import WhyPawPrints from '../../components/whyPawPrints/WhyPawPrints'
 
 
 const Home = () => {

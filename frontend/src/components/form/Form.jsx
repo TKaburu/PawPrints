@@ -33,25 +33,34 @@ const Form = ({route, method}) => {
             }
 
             const csrfToken = Cookies.get('csrftoken');
-
-            // const response = await api.post(route, {email, username, password});
             const response = await api.post(route, payload, {
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': csrfToken,
                 },
-                
             });
-            if (method === "login") {
-                localStorage.setItem(ACCESS_TOKEN, response.data.access);
-                localStorage.setItem(REFRESH_TOKEN, response.data.refresh);
-                navigate("/");
-            } else {
-                navigate("/login");
-            };
+    
+            localStorage.setItem(ACCESS_TOKEN, response.data.access);
+            localStorage.setItem(REFRESH_TOKEN, response.data.refresh);
+
+            const userProfileResponse = await api.get('/auth/profile/', {
+                headers: {
+                    Authorization: `Bearer ${response.data.access}`
+                }
+            });
+    
+            const userType = userProfileResponse.data.user_type;
+    
+            if (userType === 'pet_owner') {
+                navigate(`/${username}`);
+            } else if (userType === 'vet') {
+                navigate("/vet-dashboard");
+            } else if (userType === 'welfare') {
+                navigate("/welfare-dashboard");
+            }
         } catch (error) {
             alert(error);
-        };
+        }
         setLoading(false);
     };
 
@@ -103,6 +112,7 @@ const Form = ({route, method}) => {
                                     <option value="">Select User Type</option>
                                     <option value="pet_owner">Pet Owner</option>
                                     <option value="vet">Vet</option>
+                                    <option value="welfare">Welfare</option>
                                 </select>
                         </div>
                     </>

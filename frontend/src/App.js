@@ -8,17 +8,20 @@ import {
 } from "react-router-dom";
 import {
   Navbar,
+  ProtectedRoute,
+  Footer,
+} from "./components";
+
+import {
   Home,
   Login,
   Register,
   PetSearch,
-  PetOwnerDashboard,
-  RegisterPet,
-  TransferPetOwnership,
-  ProtectedRoute,
   NotFound,
-  Footer,
-} from "./components";
+  PetOwnerDashboard,
+  TransferPetOwnership,
+  RegisterPet,
+} from "./pages";
 
 function Logout() {
   localStorage.clear();
@@ -42,7 +45,7 @@ const Layout = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<RegisterandLogout />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/search" element={<PetSearch />} />
           <Route

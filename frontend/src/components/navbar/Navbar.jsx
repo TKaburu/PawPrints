@@ -80,7 +80,7 @@ const Navbar = () => {
         ) : (
           <div className="auth">
             <Link to="/login">Login</Link>
-            <button><Link to="/register">Register</Link></button>
+            <Link to="/register"><button>Register</button></Link>
           </div>
         )}
       </section>

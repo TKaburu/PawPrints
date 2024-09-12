@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -26,6 +26,7 @@ def registerUser(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
+@csrf_exempt
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getUser(request):
@@ -36,35 +37,44 @@ def getUser(request):
     serializer = UserSerializer(user)
     return Response(serializer.data)
 
-# @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
-# def userProfile(request, username):
-#     """
-#     View for user profile, adapting based on user type.
-#     """
-#     profile_user = get_object_or_404(User, username=username)
-#     user_serializer = UserSerializer(profile_user)
-    
-#     if profile_user.user_type == 'Pet Owner':
-#         pets = Pet.objects.filter(owner=profile_user)
-#         pet_serializer = PetSerializer(pets, many=True)
-#         profile_data = {
-#             'user': user_serializer.data,
-#             'pets': pet_serializer.data,
-#             'pet_count': pets.count()
-#         }
-#     elif profile_user.user_type == 'Vet':
-#         pets = Pet.objects.filter(vet=profile_user)
-#         pet_serializer = PetSerializer(pets, many=True)
-#         profile_data = {
-#             'user': user_serializer.data,
-#             'pets_under_care': pet_serializer.data,
-#             'pets_count': pets.count()
-#         }
-#     else:
-#         return Response({'error': 'Invalid user type'}, status=status.HTTP_400_BAD_REQUEST)
-    
-#     return Response(profile_data, status=status.HTTP_200_OK)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def userDashboard(request):
+    """
+    Returns pet data based on the user type.
+    Pet owners see their pets.
+    Vets see pets they are responsible for.
+    Welfare users see all pets.
+    """
+    user = request.user
+
+    if user.user_type == 'pet_owner':
+        pets = Pet.objects.filter(owner=user)
+    elif user.user_type == 'vet':
+        pets = Pet.objects.filter(vet=user)
+    elif user.user_type == 'welfare':
+        pets = Pet.objects.all()
+    else:
+        return Response({"error": "Invalid user type"}, status=400)
+
+    serializer = PetSerializer(pets, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def userProfile(request):
+    """
+    Returns the logged-in user's profile info, including user_type.
+    """
+    user = request.user
+    return Response({
+        'id': user.id,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'username': user.username,
+        'email': user.email,
+        'user_type': user.user_type
+    })
 
 
 @api_view(['GET'])
@@ -74,8 +84,6 @@ def pet_owner_dashboard(request, username):
     Retrieve the list of pets for a specific user by username.
     """
     user = get_object_or_404(CustomUser, username=username)
-    # if request.user.username != user.username:
-    #     return Response({"detail": "You do not have permission to view this data."}, status=status.HTTP_403_FORBIDDEN)
     if username == 'undefined' or not username:
         username =  request.user.username
     pets = Pet.objects.filter(pet_parent_name=user)
