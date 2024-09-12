@@ -6,8 +6,10 @@ const PetSearch = () => {
   const [microchipNo, setMicrochipNo] = useState("");
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+  const [searched, setSearched] = useState(false); // New state to track if search has been performed
 
   const handleSearch = async () => {
+    setSearched(true); // Set searched to true when search is performed
     try {
       const data = await searchPetByMicrochip(microchipNo);
       console.log("API Response:", data);
@@ -40,37 +42,32 @@ const PetSearch = () => {
       <div className="search-btn">
         <button onClick={handleSearch}>Search</button>
       </div>
-      <section className="search-results">
+      <section className={`search-results ${searched ? "show-results" : ""}`}>
         {error && <p>{error}</p>}
         {result && (
           <div className="pet-results">
             <div className="title">
               <h2>Pet Details</h2>
             </div>
-            <section className="pet-details">
-              {result.map((pet, index) => (
-                <div key={index}>
-                  <p>Name: {pet.name}</p>
-                  <p>Pet Type: {pet.type_of_pet}</p>
-                  <p>Breed: {pet.breed}</p>
-                  <p>
-                    Age: {pet.age} {pet.age === 1 ? "Year" : "Years"}
-                  </p>
-                  <p>
-                    Owner: {pet.pet_parent_name.first_name}{" "}
-                    {pet.pet_parent_name.last_name}
-                  </p>
-                  <p>Primary Vet: {pet.primary_vet}</p>
-                  <p>Primary Vet Contact: {pet.primary_vet_contact}</p>
-                  {pet.secondary_vet && (
-                    <p>Secondary Vet: {pet.secondary_vet}</p>
-                  )}
-                  {pet.secondary_vet_contact && (
-                    <p>Secondary Vet Contact: {pet.secondary_vet_contact}</p>
-                  )}
+            <section className="pet-result-details">
+              {result.map((pet, slug) => (
+                <div key={slug}>
+                  <section className="pet-details">
+                    <p>Name: {pet.name}</p>
+                    <p>Owner: {pet.pet_parent_name.first_name}</p>
+                    <p>Primary Vet: {pet.primary_vet.first_name} {pet.primary_vet.last_name}</p>
+                    <p>Contact: {pet.primary_vet_contact}</p>
+
+                    {pet.secondary_vet && (
+                      <>
+                        <p>Secondary Vet: {pet.secondary_vet.first_name} {pet.secondary_vet.last_name}</p>
+                        <p>Contact: {pet.secondary_vet_contact}</p>
+                      </>
+                    )}
+                  </section>
+                  
                 </div>
               ))}
-              ;
             </section>
           </div>
         )}

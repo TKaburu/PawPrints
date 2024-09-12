@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from accounts.serializers import UserSerializer
 from .models import *
 from .serializers import *
@@ -60,6 +60,7 @@ def pet_detail(request, slug):
     
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def petSearch(request, search):
     """
     This function searches for a pet by name.
