@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./aboutPawPrints.css";
 import pawPrintsAbout from "../../assets/images/pawprints-about.jpg";
 
@@ -12,7 +13,9 @@ const AboutPawPrints = () => {
             PawPrints is a streamlined platform for registering pets using their
             microchip numbers to enhance safety and facilitate quick reunions.
           </p>
-          <button>Get Started</button>
+          <Link to="/register">
+            <button>Register</button>
+          </Link>
         </section>
         <section className="about-image">
           <img src={pawPrintsAbout} alt="PawPrints About" />
