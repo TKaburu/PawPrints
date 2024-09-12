@@ -1,0 +1,77 @@
+.why-signup {
+    width: 100%;
+    padding: 40px 20px;
+    box-sizing: border-box;
+    margin: 0 auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    margin: 20px 0;
+    
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.title h2 {
+    font-size: 2.5rem;
+    color: #333;
+}
+
+.reasons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.reason {
+    border-radius: 10px;
+    padding: 20px;
+    transition: transform 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.reason:hover {
+    transform: translateY(-5px);
+}
+
+.icon {
+    font-size: 2.5rem;
+    margin-right: 20px;
+}
+
+.reason-content {
+    flex: 1;
+}
+
+.reason-content h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #444;
+}
+
+.reason-content p {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .reasons {
+        grid-template-columns: 1fr;
+    }
+    
+    .reason {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .icon {
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+}
