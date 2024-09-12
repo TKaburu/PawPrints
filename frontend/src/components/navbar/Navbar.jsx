@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { FaTimes, FaBars, FaUser } from 'react-icons/fa'; // Import FaUser for user icon
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { FaTimes, FaBars, FaUser } from 'react-icons/fa';
 import api from '../../api/api';
 import { ACCESS_TOKEN } from '../../constants';
 import './navbar.css';
@@ -9,18 +9,26 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
+    checkAuthStatus();
+  }, [location]);
+
+  const checkAuthStatus = () => {
     const token = localStorage.getItem(ACCESS_TOKEN);
     if (token) {
       setIsLoggedIn(true);
       fetchUserDetails();
+    } else {
+      setIsLoggedIn(false);
     }
-  }, []);
+  };
 
   const fetchUserDetails = async () => {
     try {
-      const response = await api.get('http://127.0.0.1:8000/auth/get-user/', {
+      const response = await api.get('http://127.0.0.1:8000/auth/profile/', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem(ACCESS_TOKEN)}`,
         }
@@ -31,10 +39,16 @@ const Navbar = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.clear();
+    setIsLoggedIn(false);
+    setUsername('');
+    navigate('/login');
+  };
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-
 
   return (
     <nav className="navbar">
@@ -57,8 +71,10 @@ const Navbar = () => {
               <FaUser className="user-icon" />
               <div className="logout-menu">
                 <Link to={`/${username}`}>Dashboard</Link>
-                <Link to="/logout">Logout</Link>
-              </div>              
+                <button onClick={handleLogout}>
+                  Logout
+                </button>
+              </div>
             </div>
           </div>
         ) : (
