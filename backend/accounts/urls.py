@@ -6,8 +6,12 @@ from .views import *
 urlpatterns = [
     # ------------------------------- Auth URLs ------------------------------- #
 
-    path('register/', registerUser, name='register_user'),
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('register/pet-owner/', registerPetOwner, name='register_pet_owner'),
+    path('register/vet-clinic/', registerVetClinic, name='register _vet_clinic'),
+    path('register/vet/', registerVet, name='register_vet'),
+    path('register/welfare-org/', registerWelfare, name='register_welfare'),
+
+    path('token/', EmailTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
     # ------------------------------- Profile URLs ------------------------------- #

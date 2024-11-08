@@ -4,27 +4,108 @@ from django.contrib.auth import get_user_model
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import status
-from .serializers import UserSerializer
+from .serializers import *
 from api.models import Pet
 from api.serializers import PetSerializer
-from .models import CustomUser
+from .models import *
 
 User = get_user_model()
 
-@api_view(['POST'])
+# @api_view(['POST'])
+# @permission_classes([AllowAny])
+# def registerUser(request):
+#     """
+#     Create a new user.
+#     """
+#     if request.method == 'POST':
+#         serializer = UserSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+class EmailTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
+
+@api_view(['GET', 'POST'])
 @permission_classes([AllowAny])
-def registerUser(request):
+def registerPetOwner(request):
     """
-    Create a new user.
+    This function registers a Pet Owner.
     """
     if request.method == 'POST':
-        serializer = UserSerializer(data=request.data)
+        serializer = PetOwnerSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    elif request.method == 'GET':
+        pet_owners = PetOwner.objects.all()
+        serializer = PetOwnerSerializer(pet_owners, many=True)
+        return Response(serializer.data)
+    else:
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+@api_view(['GET', 'POST'])
+@permission_classes([AllowAny])
+def registerVetClinic(request):
+    """
+    This function registers a Vet Clinic.
+    """
+    if request.method == 'POST':
+        serializer = VetClinicSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'GET':
+        vet_clinics = VetClinic.objects.all()
+        serializer = VetClinicSerializer(vet_clinics, many=True)
+        return Response(serializer.data)
+    else:
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    
+@api_view(['GET', 'POST'])
+@permission_classes([AllowAny])
+def registerVet(request):
+    """
+    This function registers a Vet.
+    """
+    if request.method == 'POST':
+        serializer = VetSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'GET':
+        vets = Vet.objects.all()
+        serializer = VetSerializer(vets, many=True)
+        return Response(serializer.data)
+    else:
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    
+@api_view(['GET', 'POST'])
+@permission_classes([AllowAny])
+def registerWelfare(request):
+    """
+    This function registers a Welfare Organization.
+    """
+    if request.method == 'POST':
+        serializer = WelfareSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'GET':
+        welfare = WelfareOrg.objects.all()
+        serializer = WelfareSerializer(welfare, many=True)
+        return Response(serializer.data)
+    else:
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
 
 @csrf_exempt
 @api_view(['GET'])
