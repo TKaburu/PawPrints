@@ -1,7 +1,7 @@
 import React from 'react';
 import { MdOutlineSecurity } from "react-icons/md";
 import { SiHuggingface } from "react-icons/si";
-import './whyPawPrints.css';
+import '../styles/whyPawPrints.css';
 
 const WhyPawPrints = () => {
   const reasons = [

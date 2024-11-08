@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../api/api';
-import './transferPetOwnership.css';
+import '../../styles/transferPetOwnership.css';
 
 const TransferPetOwnership = () => {
   const { slug } = useParams();

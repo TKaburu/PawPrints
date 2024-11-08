@@ -1,6 +1,6 @@
 import React from "react";
-import kpcaLogo from "../../assets/images/kpca-logo.png";
-import "./kpcaHero.css";
+import kpcaLogo from "../assets/images/kpca-logo.png";
+import "../styles/kpcaHero.css";
 
 const KpcaHero = () => {
   return (

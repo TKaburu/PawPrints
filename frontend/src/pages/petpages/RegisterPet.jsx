@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import api from '../../api/api';
 import { ACCESS_TOKEN } from '../../constants';
-import './registerPet.css';
+import '../../styles/registerPet.css';
 
 const RegisterPet = () => {
     const [name, setName] = useState('');

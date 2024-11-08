@@ -1,6 +1,6 @@
 import React from "react";
 import Slider from "react-slick";
-import "./reunificationStories.css";
+import "../styles/reunificationStories.css";
 
 const reunificationStories = [
   {

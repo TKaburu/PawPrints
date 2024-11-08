@@ -13,50 +13,26 @@
   height: 60px;
 }
 
-
 .logo {
   font-size: 1.8rem;
   font-weight: bold;
   color: var(--accent-color);
 }
 
-.links {
+.nav-links {
   display: flex;
   gap: 20px;
 }
 
-
-.links a {
+.nav-links a {
   color: var(--text-color);
   font-size: 1rem;
   transition: color 0.3s ease;
+  text-decoration: none;
 }
 
-.links a:hover {
+.nav-links a:hover {
   color: var(--accent-color);
-}
-
-.auth {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 30px;
-}
-
-
-.auth button {
-  padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    background-color: var(--accent-color);
-    color: var(--button-text-color);
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.auth button:hover {
-  background-color: var(--accent-color-dark);
 }
 
 .menu-icon {
@@ -105,7 +81,7 @@
 }
 
 @media (max-width: 768px) {
-  .links {
+  .nav-links {
     display: none;
   }
 
@@ -113,7 +89,7 @@
     display: flex;
   }
 
-  .links.open {
+  .nav-links.open {
     display: flex;
     flex-direction: column;
     position: absolute;
@@ -127,7 +103,7 @@
     z-index: 1000;
   }
 
-  .links a {
+  .nav-links a {
     margin: 10px 0;
     font-size: 1.2rem;
   }

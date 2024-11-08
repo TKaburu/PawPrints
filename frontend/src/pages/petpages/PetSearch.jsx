@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { searchPetByMicrochip } from "../../api/apiService";
-import "./petSearch.css";
+import "../../styles/petSearch.css";
 
 const PetSearch = () => {
   const [microchipNo, setMicrochipNo] = useState("");
@@ -27,7 +27,8 @@ const PetSearch = () => {
   };
 
   return (
-    <section className="search-container">
+    <section className="main-container">
+      <section className="search-container">
       <div className="title">
         <h1>Search Pet By Microchip</h1>
       </div>
@@ -73,6 +74,8 @@ const PetSearch = () => {
         )}
       </section>
     </section>
+    </section>
+    
   );
 };
 
