@@ -14,8 +14,13 @@ import {
 
 import {
   Home,
-  Login,
-  Register,
+  PetOwnerRegistration,
+  VetRegistration,
+  VetClinicRegistration,
+  WelfareOrgRegistration,
+  PetOwnerLogin,
+  VetClinicLogin,
+  WelfareOrgLogin,
   PetSearch,
   NotFound,
   PetOwnerDashboard,
@@ -25,13 +30,13 @@ import {
 
 function Logout() {
   localStorage.clear();
-  return <Navigate to="/login" />;
+  return <Navigate to="/" />;  
 }
 
-function RegisterandLogout() {
-  localStorage.removeItem("token");
-  return <Register />;
-}
+// function RegisterandLogout() {
+//   localStorage.removeItem("token");
+//   return <Register />;
+// }
 
 const Layout = () => {
   const location = useLocation();
@@ -44,10 +49,27 @@ const Layout = () => {
       <section className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route
+              path="/register/pet-owner"
+              element={<PetOwnerRegistration />}
+            />
+
+          <Route path="/register/vet" element={<VetRegistration />} />
+          <Route
+            path="/register/vet-clinic"
+            element={<VetClinicRegistration />}
+          />
+          <Route
+            path="/register/welfare-organization"
+            element={<WelfareOrgRegistration />}
+          />
+
+          <Route path="/login/pet-owner" element={<PetOwnerLogin />} />
+          <Route path="/login/vet-clinic" element={<VetClinicLogin />} />
+          <Route path="/login/welfare-orginization" element={<WelfareOrgLogin />} />
+
           <Route path="/logout" element={<Logout />} />
-          <Route path="/search" element={<PetSearch />} />
+          <Route path="/search-pet" element={<PetSearch />} />
           <Route
             path="/:username"
             element={
