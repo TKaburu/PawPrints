@@ -1,0 +1,9 @@
+.double-col {
+    display: flex;
+    justify-content: space-evenly;
+    box-shadow: var(--box-shadow);
+    align-items: center;
+    padding: 20px;
+
+}
+
