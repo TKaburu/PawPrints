@@ -12,21 +12,19 @@
 }
 
 .kpca-details .title h3 span {
-    font-family: 'Poppins', sans-serif;
-    font-size: 2rem;
-    color: var(--accent-color); 
+    font-size: 2.3rem;
     margin-bottom: 20px;
 }
 
-.kpca-details .title h3 span {
-    color: #ee8e46; 
-    font-weight: bold;
+.kpca-details .title h3 a :hover {
+    color: var(--text-color);
 }
+
 
 .kpca-description p {
     font-family: 'Poppins', sans-serif;
     font-size: 1rem;
-    color: #333;
+    color: var(--text-color);
     line-height: 1.6;
     max-width: 800px;
     margin: 0 auto;
