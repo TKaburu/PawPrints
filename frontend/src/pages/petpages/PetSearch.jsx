@@ -27,9 +27,8 @@ const PetSearch = () => {
   };
 
   return (
-    <section className="main-container">
-      <section className="search-container">
-      <div className="title">
+    <section className="search-container">
+      <div className="title"> 
         <h1>Search Pet By Microchip</h1>
       </div>
       <section className="search-bar">
@@ -73,9 +72,7 @@ const PetSearch = () => {
           </div>
         )}
       </section>
-    </section>
-    </section>
-    
+    </section>   
   );
 };
 
