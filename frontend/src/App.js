@@ -4,7 +4,7 @@ import {
   Routes,
   Route,
   Navigate,
-  useLocation,
+  // useLocation,
 } from "react-router-dom";
 import {
   Navbar,
@@ -26,6 +26,7 @@ import {
   PetOwnerDashboard,
   TransferPetOwnership,
   RegisterPet,
+  ContactPage,
 } from "./pages";
 
 function Logout() {
@@ -39,8 +40,8 @@ function Logout() {
 // }
 
 const Layout = () => {
-  const location = useLocation();
-  const hideNavbarRoutes = ["/login", "/register", "/logout"];
+  // const location = useLocation();
+  // const hideNavbarRoutes = ["/login", "/register", "/logout"];
 
   return (
     <>
@@ -95,6 +96,7 @@ const Layout = () => {
               </ProtectedRoute>
             }
           />
+          <Route path="/contact" element={<ContactPage />} />
           <Route path="*" element={<NotFound />} />
           
         </Routes>

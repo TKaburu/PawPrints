@@ -1,15 +1,19 @@
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.core.mail import send_mail
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import get_user_model
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import status
+from .models import *
 from .serializers import *
 from api.models import Pet
 from api.serializers import PetSerializer
-from .models import *
+import json
+
 
 User = get_user_model()
 
@@ -178,3 +182,28 @@ def checkUserExists(request):
     if CustomUser.objects.filter(username=username).exists():
         return Response({"exists": True}, status=status.HTTP_200_OK)
     return Response({"exists": False}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def contact(request):
+    try:
+        # Parse the incoming JSON data
+        data = request.data
+        name = data.get('name')
+        email = data.get('email')
+        message = data.get('message')
+
+        # Validate input
+        if not name or not email or not message:
+            return Response({"error": "All fields are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Send email
+        subject = f"New Message from {name}"
+        body = f"Message from: {name}\nEmail: {email}\n\n{message}"
+        send_mail(subject, body, 'your_email@example.com', ['recipient@example.com'])
+
+        return Response({"success": "Message sent successfully."}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+

@@ -1,6 +1,7 @@
 // ------------------------------- Pages ------------------------------- #
 export { default as Home } from './home/Home';
 export { default as NotFound } from './notFound/NotFound';
+export { default as ContactPage } from './contact/ContactPage';
 
 // ------------------------------- Auth Pages ------------------------------- #
 export { default as VetRegistration } from './register/VetRegistration';
