@@ -19,7 +19,7 @@ const Footer = () => {
           <Link to="/search">Microchip Search</Link>
           <Link to="/register-pet">Register a Pet</Link>
           <Link to="#">Change Ownership</Link>
-          <Link to="#">Contact</Link>
+          <Link to="/contact">Contact</Link>
         </section>
         <section className="legal">
           <Link to="#">Terms of Service</Link>

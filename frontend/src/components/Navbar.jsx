@@ -38,7 +38,7 @@ const Navbar = () => {
         <Link to="/search-pet">Search a MicroChip</Link>
         <Link to="/register-pet" onClick={(e) => handleProtectedLinkClick(e, "/register-pet")}>Register a Pet</Link>
         <Link to="/transfer-pet-ownership" onClick={(e) => handleProtectedLinkClick(e, "/transfer-pet-ownership")}>Change Pet Ownership</Link>
-        {/* <Link to="/contact">Contact</Link> */}
+        <Link to="/contact">Contact</Link>
       </section>
       <section className="auth">
         <button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} >
