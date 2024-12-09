@@ -201,7 +201,7 @@ def contact(request):
         # Send email
         subject = f"New Message from {name}"
         body = f"Message from: {name}\nEmail: {email}\n\n{message}"
-        send_mail(subject, body, 'your_email@example.com', ['recipient@example.com'])
+        send_mail(subject, body, {email} , [settings.EMAIL_HOST_USER])
 
         return Response({"success": "Message sent successfully."}, status=status.HTTP_200_OK)
     except Exception as e:
