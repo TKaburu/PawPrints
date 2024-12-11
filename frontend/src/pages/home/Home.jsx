@@ -11,7 +11,7 @@ import '../../styles/home.css'
 const Home = () => {
   return (
     <>
-    <section className="main-container">
+    <section className='home-container'>
       <section className="about-pawprints">
         <AboutPawPrints />
       </section>
