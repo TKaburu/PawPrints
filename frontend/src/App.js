@@ -21,9 +21,9 @@ import {
   PetOwnerLogin,
   VetClinicLogin,
   WelfareOrgLogin,
+  PetOwnerDashboard,
   PetSearch,
   NotFound,
-  PetOwnerDashboard,
   TransferPetOwnership,
   RegisterPet,
   ContactPage,
@@ -70,6 +70,8 @@ const Layout = () => {
           <Route path="/login/welfare-orginization" element={<WelfareOrgLogin />} />
 
           <Route path="/logout" element={<Logout />} />
+
+          <Route path="/pet-owner-dashboard/:username" element={<PetOwnerDashboard />} />
           <Route path="/search-pet" element={<PetSearch />} />
           <Route
             path="/:username"
