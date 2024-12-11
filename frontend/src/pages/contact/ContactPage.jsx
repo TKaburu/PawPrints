@@ -36,6 +36,13 @@ const ContactPage = () => {
           <section className="title">
             <h1>Contact Us</h1>
           </section>
+
+          <section className="description">
+            <p>
+              Need to reach out to us? Send us a message and we will get back to you as soon as possible.
+            </p>
+          </section>
+      
           <label>
             Name:
             <input

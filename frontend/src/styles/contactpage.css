@@ -8,3 +8,10 @@
     max-width: 500px;
     margin-top: 50px;
 }
+
+.description {
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    text-align: center;
+    color: var(--text-color);
+}
