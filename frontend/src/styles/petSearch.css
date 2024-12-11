@@ -4,6 +4,14 @@
     align-items: center;
     padding: 20px;
     box-shadow: var(--box-shadow);
+    background-color: #ffffff;
+    
+}
+
+.description {
+    margin-bottom: 20px;
+    color: var(--text-color);
+    text-align: center;
 }
 
 .search-bar {
@@ -16,6 +24,12 @@
     padding: 10px;
     border-radius: 4px;
     font-size: 16px;
+}
+
+.search-bar input:focus {
+    border-color: var(--accent-color);
+    outline: none;
+    box-shadow: var(--input-boder-shadow);
 }
 
 .search-btn {
