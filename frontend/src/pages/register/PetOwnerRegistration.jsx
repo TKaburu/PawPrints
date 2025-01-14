@@ -40,10 +40,22 @@ const PetOwnerRegistration = () => {
       console.log('Registration failed:', error.response.data);
     }
   };
+  const styles = {
+    formContainer: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '100%',
+      maxWidth: '500px',
+      marginTop: '50px',
+    },
+  };
+  
 
   return (
     <div className='main-container'>
-      <section className='form-container'>
+      <section style={styles.formContainer}>
             <form onSubmit={handleSubmit}>
                 <section className="title">
                     <h1>Pet Owner Registration</h1>

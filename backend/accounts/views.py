@@ -31,7 +31,7 @@ User = get_user_model()
 #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 #     return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-class EmailTokenObtainPairView(TokenObtainPairView):
+class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
 @api_view(['GET', 'POST'])
@@ -169,12 +169,23 @@ def pet_owner_dashboard(request, username):
     Retrieve the list of pets for a specific user by username.
     """
     user = get_object_or_404(CustomUser, username=username)
-    if username == 'undefined' or not username:
-        username =  request.user.username
+    if not username or username == 'undefined':
+        username = request.user.username  # Fallback to logged-in user if username is missing
+
     pets = Pet.objects.filter(pet_parent_name=user)
     serializer = PetSerializer(pets, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def vet_clinic_dashboard(request, slug):
+    """
+    Retrieve the list of pets registered under a specific vet clinic.
+    """
+    clinic = get_object_or_404(VetClinic, slug=slug)
+    pets = Pet.objects.filter(vet_clinic=clinic)
+    serializer = PetSerializer(pets, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def checkUserExists(request):

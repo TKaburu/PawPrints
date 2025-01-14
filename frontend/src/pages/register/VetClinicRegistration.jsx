@@ -49,82 +49,96 @@ const VetClinicRegistration = () => {
     }
   };
 
+  const styles = {
+    formContainer: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '100%',
+      maxWidth: '500px',
+      marginTop: '50px',
+    },
+  };
+
   return (
     <div>
-      <section className="form-container">
-        <form onSubmit={handleSubmit}>
-          <div className="title">
-            <h1>Vet Clinic Registration</h1>
-          </div>
-          <div>
-            <input
-              className='form-input'
-              placeholder='Clinic Name'
-              type="text"
-              name="clinic_name"
-              value={formData.clinic_name}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div>
-            <input
-              className='form-input'
-              placeholder='Email'
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div>
-            <input
-              className='form-input'
-              placeholder='Phone'
-              type="text"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div>
-            <input
-              className='form-input'
-              placeholder='Address'
-              type="text"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div>
-            <input
-              className='form-input'
-              placeholder='Password'
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div>
-            <input
-              className='form-input'
-              placeholder='Confirm Password'
-              type="password"
-              name="confirm_password"
-              value={formData.confirm_password}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <button type="submit">Register</button>
-        </form>
-      </section>
+      <div className="main-container">
+        <section style={styles.formContainer}>
+          <form onSubmit={handleSubmit}>
+            <div className="title">
+              <h1>Vet Clinic Registration</h1>
+            </div>
+            <div>
+              <input
+                className='form-input'
+                placeholder='Clinic Name'
+                type="text"
+                name="clinic_name"
+                value={formData.clinic_name}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div>
+              <input
+                className='form-input'
+                placeholder='Email'
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div>
+              <input
+                className='form-input'
+                placeholder='Phone'
+                type="text"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div>
+              <input
+                className='form-input'
+                placeholder='Address'
+                type="text"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div>
+              <input
+                className='form-input'
+                placeholder='Password'
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div>
+              <input
+                className='form-input'
+                placeholder='Confirm Password'
+                type="password"
+                name="confirm_password"
+                value={formData.confirm_password}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <button type="submit">Register</button>
+          </form>
+        </section>
+      </div>
       {message && <p>{message}</p>}
     </div>
   );

@@ -52,6 +52,9 @@ const Navbar = () => {
             <Link to="/login/vet" onClick={handleMouseLeave}>
               Login as Vet
             </Link>
+            <Link to="/login/vet-clinic" onClick={handleMouseLeave}>
+              Login as Vet Clinic
+            </Link>
             <Link to="/login/welfare" onClick={handleMouseLeave}>
               Login as Welfare
             </Link>

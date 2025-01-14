@@ -9,5 +9,7 @@ export {default as ReunificationStories} from './ReunificationStories';
 export {default as WhyPawPrints} from './WhyPawPrints';
 export {default as Footer} from './Footer';
 
+// ------------------------------- other Components ------------------------------- #
+export {default as Loading} from './Loading';
 
 

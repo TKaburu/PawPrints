@@ -16,37 +16,23 @@ class UserSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    """
-    This is a serializer for obtaining the access and refresh token
-    using email and password instead of username and password.
-    """
-    email = serializers.EmailField(required=True)
-
     def validate(self, attrs):
-        """
-        This method validates the email and password passed.
-        """
-        email = attrs.get('email')
-        password = attrs.get('password')
-
-        if email and password:
-            user = authenticate(request=self.context.get('request'), email=email, password=password)
-
-            if not user:
-                raise serializers.ValidationError('No active account found with the given credentials')
-
-            # Set the user attribute to be used by the TokenObtainPairSerializer
-            attrs['user'] = user
+        data = super().validate(attrs)
+        
+        # Get the user object from the token
+        user = self.user
+        
+        # Safely get the related profile (pet_owner_profile, vet_clinic_profile, etc.)
+        if hasattr(user, 'pet_owner_profile'):
+            data['slug'] = user.pet_owner_profile.slug
+        elif hasattr(user, 'vet_clinic_profile'):
+            data['slug'] = user.vet_clinic_profile.slug
+        elif hasattr(user, 'welfare_org_profile'):
+            data['slug'] = user.welfare_org_profile.slug
         else:
-            raise serializers.ValidationError('Must include "email" and "password".')
-        return super().validate(attrs)
-    
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-        # Add custom claims
-        token['email'] = user.email
-        return token
+            data['slug'] = None  # Or handle as needed if there's no profile
+        
+        return data
 
 class PetOwnerSerializer(serializers.ModelSerializer):
     """

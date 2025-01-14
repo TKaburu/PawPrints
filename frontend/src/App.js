@@ -71,16 +71,33 @@ const Layout = () => {
 
           <Route path="/logout" element={<Logout />} />
 
-          <Route path="/pet-owner-dashboard/:username" element={<PetOwnerDashboard />} />
-          <Route path="/search-pet" element={<PetSearch />} />
-          <Route
-            path="/:username"
+          <Route 
+            path="/pet-owner-dashboard/:username" 
             element={
               <ProtectedRoute>
                 <PetOwnerDashboard />
               </ProtectedRoute>
             }
           />
+
+          <Route 
+            path="/vet-clinic-dashboard/:username" 
+            element={
+              <ProtectedRoute>
+                <PetOwnerDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route path="/search-pet" element={<PetSearch />} />
+          {/* <Route
+            path="/:username"
+            element={
+              <ProtectedRoute>
+                <PetOwnerDashboard />
+              </ProtectedRoute>
+            }
+          /> */}
           <Route
             path="/transfer-pet-ownership/:slug"
             element={

@@ -16,7 +16,7 @@ const PetOwnerDashboard = () => {
       setError(null);
 
       try {
-        const response = await api.get(`/accounts/pet-owner-dashboard/${username}/`, {
+        const response = await api.get(`http://127.0.0.1:8000/auth/pet-owner-dashboard/${username}/`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem(ACCESS_TOKEN)}`,
           }

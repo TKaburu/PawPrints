@@ -48,9 +48,21 @@ const WelfareOrgRegistration = () => {
     }
   };
 
+  const styles = {
+    formContainer: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '100%',
+      maxWidth: '500px',
+      marginTop: '50px',
+    },
+  };
+
   return (
-    <div>
-      <section className='form-container'>
+    <div className='main-container'>
+      <section style={styles.formContainer}>
         <form onSubmit={handleSubmit}>
           <div className='title'>
             <h1>Welfare Organization Registration</h1>
