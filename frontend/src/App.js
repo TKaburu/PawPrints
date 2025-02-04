@@ -10,17 +10,11 @@ import {
   Navbar,
   ProtectedRoute,
   Footer,
+  AuthForm,
 } from "./components";
 
 import {
   Home,
-  PetOwnerRegistration,
-  VetRegistration,
-  VetClinicRegistration,
-  WelfareOrgRegistration,
-  PetOwnerLogin,
-  VetClinicLogin,
-  WelfareOrgLogin,
   PetOwnerDashboard,
   PetSearch,
   NotFound,
@@ -50,24 +44,8 @@ const Layout = () => {
       <section className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route
-              path="/register/pet-owner"
-              element={<PetOwnerRegistration />}
-            />
-
-          <Route path="/register/vet" element={<VetRegistration />} />
-          <Route
-            path="/register/vet-clinic"
-            element={<VetClinicRegistration />}
-          />
-          <Route
-            path="/register/welfare-organization"
-            element={<WelfareOrgRegistration />}
-          />
-
-          <Route path="/login/pet-owner" element={<PetOwnerLogin />} />
-          <Route path="/login/vet-clinic" element={<VetClinicLogin />} />
-          <Route path="/login/welfare-orginization" element={<WelfareOrgLogin />} />
+          <Route path="/register" element={<AuthForm />} />
+          <Route path="/login" element={<AuthForm />} />
 
           <Route path="/logout" element={<Logout />} />
 
@@ -78,7 +56,7 @@ const Layout = () => {
                 <PetOwnerDashboard />
               </ProtectedRoute>
             }
-          />
+        />
 
           <Route 
             path="/vet-clinic-dashboard/:username" 

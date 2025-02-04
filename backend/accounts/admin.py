@@ -26,7 +26,3 @@ class CustomUserAdmin(UserAdmin):
     )
 
 admin.site.register(CustomUser, CustomUserAdmin)
-admin.site.register(PetOwner)
-admin.site.register(Vet)
-admin.site.register(VetClinic)
-admin.site.register(WelfareOrg)

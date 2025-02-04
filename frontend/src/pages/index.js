@@ -2,16 +2,8 @@
 export { default as Home } from './home/Home';
 export { default as NotFound } from './notFound/NotFound';
 export { default as ContactPage } from './contact/ContactPage';
+// ------------------------------ Authentication Pages ------------------------------ #
 
-// ------------------------------- Auth Pages ------------------------------- #
-export { default as VetRegistration } from './register/VetRegistration';
-export { default as VetClinicRegistration } from './register/VetClinicRegistration';
-export { default as WelfareOrgRegistration } from './register/WelfareOrgRegistration';
-export { default as PetOwnerRegistration } from './register/PetOwnerRegistration';
-
-export {default as PetOwnerLogin} from './login/PetOwnerLogin';
-export {default as VetClinicLogin} from './login/VetClinicLogin';
-export {default as WelfareOrgLogin} from './login/WelfareOrgLogin';
 
 // ------------------------------- Pet Pages ------------------------------- #
 export { default as PetSearch } from './petpages/PetSearch';
