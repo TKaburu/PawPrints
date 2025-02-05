@@ -1,67 +1,77 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { ACCESS_TOKEN } from "../constants";
-import "../styles/navbar.css";
+
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { FaTimes, FaBars, FaUser } from 'react-icons/fa';
+import api from '../api/api';
+import { ACCESS_TOKEN } from '../constants';
+import '../styles/navbar.css';
 
 const Navbar = () => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState('');
 
-  const handleMouseEnter = () => {
-    setIsDropdownOpen(true);
-  };
+  useEffect(() => {
+    const token = localStorage.getItem(ACCESS_TOKEN);
+    if (token) {
+      setIsLoggedIn(true);
+      fetchUserDetails();
+    }
+  }, []);
 
-  const handleMouseLeave = () => {
-    setIsDropdownOpen(true);
-  };
-
-  const isAuthenticated = () => {
-    return !!localStorage.getItem(ACCESS_TOKEN);
-  };
-
-  const handleProtectedLinkClick = (e, path) => {
-    if (!isAuthenticated()) {
-      e.preventDefault();
-      navigate("/login/pet-owner");
-    } else {
-      navigate(path);
+  const fetchUserDetails = async () => {
+    try {
+      const response = await api.get('accounts/get-user/', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem(ACCESS_TOKEN)}`,
+        }
+      });
+      setUsername(response.data.username);
+    } catch (error) {
+      console.error('Error fetching user details:', error);
     }
   };
 
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+
   return (
-    <section className="navbar">
+    <nav className="navbar">
       <section className="logo">
-        <h1>PawPrints</h1>
+        PawPrints
       </section>
-      <section className="nav-links">
-        <Link to="/">Home</Link>
-        <Link to="/search-pet">Search a MicroChip</Link>
-        <Link to="/register-pet" onClick={(e) => handleProtectedLinkClick(e, "/register-pet")}>Register a Pet</Link>
-        <Link to="/transfer-pet-ownership" onClick={(e) => handleProtectedLinkClick(e, "/transfer-pet-ownership")}>Change Pet Ownership</Link>
-        <Link to="/contact">Contact</Link>
+      <section className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
+        <a href="/">Home</a>
+        <a href="/register-pet">Register a Pet</a>
+        <a href="/about">Change Ownership</a>
+        <a href="/contact">Contact</a>
       </section>
-      <section className="auth">
-        <button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} >
-          Login
-        </button>
-        {isDropdownOpen && (
-          <div className="dropdown-menu" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-            <Link to="/login/pet-owner" onClick={handleMouseLeave}>
-              Login as Pet Owner
-            </Link>
-            <Link to="/login/vet" onClick={handleMouseLeave}>
-              Login as Vet
-            </Link>
-            <Link to="/login/vet-clinic" onClick={handleMouseLeave}>
-              Login as Vet Clinic
-            </Link>
-            <Link to="/login/welfare" onClick={handleMouseLeave}>
-              Login as Welfare
-            </Link>
+      <section className={`links ${isMenuOpen ? 'open' : ''}`}>
+        {isLoggedIn ? (
+          <div className="auth">
+            <div className="welcome-msg">
+              Welcome, {username}
+            </div>
+            <div className="user-icon-container">
+              <FaUser className="user-icon" />
+              <div className="logout-menu">
+                <Link to={`/${username}`}>Dashboard</Link>
+                <Link to="/logout">Logout</Link>
+              </div>              
+            </div>
+          </div>
+        ) : (
+          <div className="auth">
+            <button><Link to="/login">Login</Link></button>
           </div>
         )}
       </section>
-    </section>
+      <div className="menu-icon" onClick={toggleMenu}>
+        {isMenuOpen ? <FaTimes /> : <FaBars />}
+      </div>
+    </nav>
   );
 };
 
