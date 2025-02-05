@@ -44,14 +44,14 @@ const AuthForm = () => {
         setSuccessMessage('Registration successful! Redirecting to login...');
         setTimeout(() => {
           navigate('/login');
-        }, 2000); // Redirect after 2 seconds
+        }, 2000);
       } else {
         localStorage.setItem(ACCESS_TOKEN, response.data.access);
         localStorage.setItem(REFRESH_TOKEN, response.data.refresh);
         setSuccessMessage('Login successful! Redirecting to home...');
         setTimeout(() => {
           navigate('/');
-        }, 2000); // Redirect after 2 seconds
+        }, 2000);
       }
     } catch (err) {
       setError('An error occurred. Please try again.');
@@ -90,14 +90,14 @@ const AuthForm = () => {
               />
             </div>
             <div>
-              <label>User Type:</label>
+              <label>I am a:</label>
               <select
                 className='form-input'
                 value={userType}
                 onChange={(e) => setUserType(e.target.value)}
                 required
               >
-                <option value="" disabled>Select user type</option>
+                <option value="" disabled>Select who you are</option>
                 <option value="pet_owner">Pet Owner</option>
                 <option value="vet_clinic">Vet Clinic</option>
                 <option value="welfare">Welfare</option>
