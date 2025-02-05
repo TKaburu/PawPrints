@@ -25,7 +25,7 @@ import {
 
 function Logout() {
   localStorage.clear();
-  return <Navigate to="/" />;  
+  return <Navigate to="/login" />;  
 }
 
 // function RegisterandLogout() {
