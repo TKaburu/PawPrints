@@ -18,4 +18,5 @@ urlpatterns = [
 
     # ------------------------------------------------------------ Dashboard ------------------------------------------------------------
     path('dashboard/pet-owner/<str:username>/', PetOwnerDashboardView.as_view(), name='pet_owner_dashboard'),
+    path('dashboard/vet-clinic/<str:username>/', VetClinicDashboardView.as_view(), name='vet_clinic_dashboard'),
 ]

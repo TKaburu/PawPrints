@@ -16,6 +16,7 @@ import {
 import {
   Home,
   PetOwnerDashboard,
+  VetClinicDashboard,
   PetSearch,
   NotFound,
   TransferPetOwnership,
@@ -49,6 +50,15 @@ const Layout = () => {
             element={
               <ProtectedRoute>
                 <PetOwnerDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/vet-clinic/:username"
+            element={
+              <ProtectedRoute>
+                <VetClinicDashboard />
               </ProtectedRoute>
             }
           />
