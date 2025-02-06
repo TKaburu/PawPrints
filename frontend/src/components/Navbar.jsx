@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaTimes, FaBars, FaUser } from 'react-icons/fa';
 import api from '../api/api';
 import { ACCESS_TOKEN } from '../constants';
@@ -10,18 +9,12 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
+  const navigate = useNavigate();  
 
-  useEffect(() => {
-    const token = localStorage.getItem(ACCESS_TOKEN);
-    if (token) {
-      setIsLoggedIn(true);
-      fetchUserDetails();
-    }
-  }, []);
-
-  const fetchUserDetails = async () => {
+  const fetchUserName = async () => {
+    // to fetch username of the user from backend for the message
     try {
-      const response = await api.get('accounts/get-user/', {
+      const response = await api.get('accounts/current-user-details/', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem(ACCESS_TOKEN)}`,
         }
@@ -32,10 +25,32 @@ const Navbar = () => {
     }
   };
 
+  const checkLoginStatus = async () => {
+    const token = localStorage.getItem(ACCESS_TOKEN);
+    if (token) {
+
+      setIsLoggedIn(true);
+      fetchUserName();
+    } else {
+      setIsLoggedIn(false);
+    }
+  };
+
+  useEffect(() => {
+    checkLoginStatus();
+  }, [checkLoginStatus]);
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem(ACCESS_TOKEN); // Remove the token on logout
+    setIsLoggedIn(false); // user is loged out
+    setUsername(''); // username removed/set to empty string after logout
+    navigate('/login');
+
+  };
 
   return (
     <nav className="navbar">
@@ -52,13 +67,13 @@ const Navbar = () => {
         {isLoggedIn ? (
           <div className="auth">
             <div className="welcome-msg">
-              Welcome, {username}
+              Welcome {username}
             </div>
             <div className="user-icon-container">
               <FaUser className="user-icon" />
               <div className="logout-menu">
-                <Link to={`/${username}`}>Dashboard</Link>
-                <Link to="/logout">Logout</Link>
+                <Link to={`/dashboard/${username}`}>Dashboard</Link>
+                <Link to="/logout" onClick={handleLogout}>Logout</Link>
               </div>              
             </div>
           </div>
