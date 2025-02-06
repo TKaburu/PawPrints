@@ -28,11 +28,6 @@ function Logout() {
   return <Navigate to="/login" />;  
 }
 
-// function RegisterandLogout() {
-//   localStorage.removeItem("token");
-//   return <Register />;
-// }
-
 const Layout = () => {
   // const location = useLocation();
   // const hideNavbarRoutes = ["/login", "/register", "/logout"];
@@ -50,16 +45,7 @@ const Layout = () => {
           <Route path="/logout" element={<Logout />} />
 
           <Route 
-            path="/pet-owner-dashboard/:username" 
-            element={
-              <ProtectedRoute>
-                <PetOwnerDashboard />
-              </ProtectedRoute>
-            }
-        />
-
-          <Route 
-            path="/vet-clinic-dashboard/:username" 
+            path="/dashboard/pet-owner/:username" 
             element={
               <ProtectedRoute>
                 <PetOwnerDashboard />
@@ -68,14 +54,7 @@ const Layout = () => {
           />
 
           <Route path="/search-pet" element={<PetSearch />} />
-          {/* <Route
-            path="/:username"
-            element={
-              <ProtectedRoute>
-                <PetOwnerDashboard />
-              </ProtectedRoute>
-            }
-          /> */}
+
           <Route
             path="/transfer-pet-ownership/:slug"
             element={

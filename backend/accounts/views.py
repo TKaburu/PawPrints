@@ -48,3 +48,16 @@ class GetUserView(generics.RetrieveAPIView):
     def get_object(self):
         return self.request.user
 
+class PetOwnerDashboardView(generics.ListAPIView):
+    """
+    Dashboard for the pet owner user
+    """
+    serializer_class = PetSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        username = self.kwargs['username']
+        user = get_object_or_404(CustomUser, username=username)
+        pets = Pet.objects.filter(pet_parent=user)
+        return pets
+
