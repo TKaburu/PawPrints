@@ -27,17 +27,17 @@ const AuthForm = () => {
     e.preventDefault();
     setError('');
     setSuccessMessage('');
-
+  
     if (isRegister && password !== confirmPassword) {
       setError('Passwords do not match');
       return;
     }
-
+  
     const url = isRegister ? '/accounts/register/' : '/accounts/token/';
     const data = isRegister
-      ? { email, username, password, confirm_password: confirmPassword, user: userType }
+      ? { email, username, password, confirm_password: confirmPassword, user_type: userType }
       : { email, password };
-
+  
     try {
       const response = await api.post(url, data);
       if (isRegister) {
@@ -46,17 +46,37 @@ const AuthForm = () => {
           navigate('/login');
         }, 2000);
       } else {
+        // Save tokens to localStorage
         localStorage.setItem(ACCESS_TOKEN, response.data.access);
         localStorage.setItem(REFRESH_TOKEN, response.data.refresh);
-        setSuccessMessage('Login successful! Redirecting to home...');
+  
+        setSuccessMessage('Login successful! Redirecting to your dashboard...');
+        
+        // Fetch user details to determine the user type
+        const fetchUserDetails = await api.get('/accounts/current-user-details/', {
+          headers: { Authorization: `Bearer ${response.data.access}` }
+        });
+        
+        const userType = fetchUserDetails.data.user_type;
+  
+        // Redirect based on user type
         setTimeout(() => {
-          navigate('/');
+          if (userType === 'pet_owner') {
+            navigate('/dashboard/pet-owner/:username');
+          } else if (userType === 'vet_clinic') {
+            navigate('/dashboard/vet-clinic/:username');
+          } else if (userType === 'welfare') {
+            navigate('/welfare-dashboard');
+          } else if (userType === 'admin') {
+            navigate('/admin-dashboard');
+          }
         }, 2000);
       }
     } catch (err) {
       setError('An error occurred. Please try again.');
     }
   };
+  
 
   return (
     <>
