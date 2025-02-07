@@ -9,10 +9,11 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
-  const navigate = useNavigate();  
+  const [userType, setUserType] = useState('');
+  const navigate = useNavigate();
 
-  const fetchUserName = async () => {
-    // to fetch username of the user from backend for the message
+  const fetchUserDetails = async () => {
+    // Fetch user details (username and user_type)
     try {
       const response = await api.get('accounts/current-user-details/', {
         headers: {
@@ -20,6 +21,7 @@ const Navbar = () => {
         }
       });
       setUsername(response.data.username);
+      setUserType(response.data.user_type); // Store user_type as well
     } catch (error) {
       console.error('Error fetching user details:', error);
     }
@@ -28,9 +30,8 @@ const Navbar = () => {
   const checkLoginStatus = async () => {
     const token = localStorage.getItem(ACCESS_TOKEN);
     if (token) {
-
       setIsLoggedIn(true);
-      fetchUserName();
+      fetchUserDetails(); // Fetch user details if logged in
     } else {
       setIsLoggedIn(false);
     }
@@ -46,10 +47,10 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem(ACCESS_TOKEN); // Remove the token on logout
-    setIsLoggedIn(false); // user is loged out
-    setUsername(''); // username removed/set to empty string after logout
+    setIsLoggedIn(false); // User is logged out
+    setUsername(''); // Username removed/set to empty string after logout
+    setUserType(''); // Reset user type
     navigate('/login');
-
   };
 
   return (
@@ -72,9 +73,15 @@ const Navbar = () => {
             <div className="user-icon-container">
               <FaUser className="user-icon" />
               <div className="logout-menu">
-                <Link to={`/dashboard/${username}`}>Dashboard</Link>
+                {/* redirecting user according to the type of user */}
+                {userType === 'pet_owner' && (
+                  <Link to={`/dashboard/pet-owner/${username}`}>Dashboard</Link>
+                )}
+                {userType === 'vet_clinic' && (
+                  <Link to={`/dashboard/vet-clinic/${username}`}>Dashboard</Link>
+                )}
                 <Link to="/logout" onClick={handleLogout}>Logout</Link>
-              </div>              
+              </div>
             </div>
           </div>
         ) : (
