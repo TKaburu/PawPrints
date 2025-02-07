@@ -21,7 +21,7 @@ const Navbar = () => {
         }
       });
       setUsername(response.data.username);
-      setUserType(response.data.user_type); // Store user_type as well
+      setUserType(response.data.user_type);
     } catch (error) {
       console.error('Error fetching user details:', error);
     }
@@ -48,7 +48,7 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem(ACCESS_TOKEN); // Remove the token on logout
     setIsLoggedIn(false); // User is logged out
-    setUsername(''); // Username removed/set to empty string after logout
+    setUsername(''); // reset username after logout
     setUserType(''); // Reset user type
     navigate('/login');
   };
@@ -79,6 +79,9 @@ const Navbar = () => {
                 )}
                 {userType === 'vet_clinic' && (
                   <Link to={`/dashboard/vet-clinic/${username}`}>Dashboard</Link>
+                )}
+                {userType === 'welfare' && (
+                  <Link to={`/dashboard/welfare-organization/${username}`}>Dashboard</Link>
                 )}
                 <Link to="/logout" onClick={handleLogout}>Logout</Link>
               </div>

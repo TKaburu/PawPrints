@@ -73,3 +73,16 @@ class VetClinicDashboardView(generics.ListAPIView):
         user = get_object_or_404(CustomUser, username=username)
         pets = Pet.objects.filter(primary_vet=user) | Pet.objects.filter(secondary_vet=user)
         return pets
+    
+class WelfareOrganizationDashboardView(generics.ListAPIView):
+    """
+    Dashboard for the welfare organization user
+    """
+    serializer_class = PetSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        username = self.kwargs['username']
+        user = get_object_or_404(CustomUser, username=username)
+        pets = Pet.objects.all()
+        return pets

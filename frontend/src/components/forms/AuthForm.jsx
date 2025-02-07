@@ -66,7 +66,7 @@ const AuthForm = () => {
           } else if (userType === 'vet_clinic') {
             navigate('/dashboard/vet-clinic/:username');
           } else if (userType === 'welfare') {
-            navigate('/welfare-dashboard');
+            navigate('/dashboard/welfare-organization/:username');
           } else if (userType === 'admin') {
             navigate('/admin-dashboard');
           }
