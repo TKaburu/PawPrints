@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ACCESS_TOKEN } from "../../constants";
 import api from "../../api/api";
-import '../../styles/petOwnerDashboard.css';
+import '../../styles/petownerdashboard.css';
 
 const PetOwnerDashboard = () => {
     const [username, setUsername] = useState('');
@@ -59,13 +59,16 @@ const PetOwnerDashboard = () => {
                             <section className="title">
                                 <h1>Here are your fur babies</h1>
                             </section>
-                            {pets.map((pet) => (
-                                <section key={pet.id} className="pet-card">
-                                    <h2>{pet.name}</h2>
-                                    <p>{pet.breed}</p>
-                                    <p>{pet.age} years old</p>
-                                </section>
-                            ))}
+                            <div className="pet-cards-grid">
+                                {pets.map((pet) => (
+                                    <section key={pet.id} className="pet-card">
+                                        <h2>{pet.pet_name}</h2>
+                                        <p>Type of pet: {pet.type_of_pet}</p>
+                                        <p>Breed: {pet.breed}</p>
+                                        <p>Age: {pet.age} years old</p>
+                                    </section>
+                                ))}
+                            </div>
                         </>
                     )}
                 </section>
