@@ -63,14 +63,14 @@ const PetSearch = () => {
                 {result.map((pet, slug) => (
                   <div key={slug}>
                     <section className="pet-details">
-                      <p>Name: {pet.name}</p>
-                      <p>Owner: {pet.pet_parent_name.first_name}</p>
-                      <p>Primary Vet: {pet.primary_vet.first_name} {pet.primary_vet.last_name}</p>
-                      <p>Contact: {pet.primary_vet_contact}</p>
+                      <p>Name: {pet.pet_name}</p>
+                      <p>Owner: {pet.pet_parent.username}</p>
+                      <p>Primary Vet: {pet.primary_vet ? pet.primary_vet.username : 'N/A'}</p>
+                      <p>Vet Clinic Contact: {pet.primary_vet_contact}</p>
 
                       {pet.secondary_vet && (
                         <>
-                          <p>Secondary Vet: {pet.secondary_vet.first_name} {pet.secondary_vet.last_name}</p>
+                          <p>Secondary Vet: {pet.secondary_vet.username}</p>
                           <p>Contact: {pet.secondary_vet_contact}</p>
                         </>
                       )}

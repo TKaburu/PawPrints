@@ -165,6 +165,7 @@ def petSearch(request, search):
     args:
         search: str
     """
+    print(f"Search query: {search}")
     if request.method == 'GET':
         if search:
             pets = Pet.objects.filter(microchip_no__icontains=search)
