@@ -16,6 +16,8 @@ urlpatterns = [
     path('user-details/', UserDetailView.as_view(), name='user-detail'),
     path('current-user-details/', GetUserView.as_view(), name='user'),
 
+    path('vet-clinics/', VetClinicsListView.as_view(), name='vet-clinics'),
+
     # ------------------------------------------------------------ Dashboard ------------------------------------------------------------
     path('dashboard/pet-owner/<str:username>/', PetOwnerDashboardView.as_view(), name='pet_owner_dashboard'),
     path('dashboard/vet-clinic/<str:username>/', VetClinicDashboardView.as_view(), name='vet_clinic_dashboard'),

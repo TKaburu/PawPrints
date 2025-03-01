@@ -8,6 +8,8 @@ from .serializers import *
 from api.models import Pet
 from api.serializers import *
 
+# -------------------------------------------- User Registration --------------------------------------------
+
 class RegisterView(generics.CreateAPIView):
     """
     Register a new user.
@@ -15,6 +17,8 @@ class RegisterView(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     permission_classes = [AllowAny]
+
+# -------------------------------------------- User Views --------------------------------------------
     
 class GetAllUsersView(generics.ListAPIView):
     """
@@ -47,6 +51,18 @@ class GetUserView(generics.RetrieveAPIView):
 
     def get_object(self):
         return self.request.user
+
+
+class VetClinicsListView(generics.ListAPIView):
+    """
+    Get the details of all vet clinics.
+    """
+    queryset = CustomUser.objects.filter(user_type='vet_clinic')
+    serializer_class = CustomUserSerializer
+    permission_classes = [IsAuthenticated]
+    
+
+# -------------------------------------------- Dashboard Views --------------------------------------------
 
 class PetOwnerDashboardView(generics.ListAPIView):
     """

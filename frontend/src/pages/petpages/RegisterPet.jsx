@@ -1,184 +1,163 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import api from '../../api/api';
 
 const RegisterPet = () => {
-  const [name, setName] = useState('');
+  // Define state variables for each form field
+  const [petName, setPetName] = useState('');
   const [microchipNo, setMicrochipNo] = useState('');
-  const [typeOfPet, setTypeOfPet] = useState('');
+  const [typeOfPet, setTypeOfPet] = useState('Dog');
   const [breed, setBreed] = useState('');
   const [age, setAge] = useState('');
-  const [petparentcontact, setPetparentcontact] = useState('');
+  const [petParentContact, setPetParentContact] = useState('');
+  const [vetClinics, setVetClinics] = useState([]);
   const [primaryVet, setPrimaryVet] = useState('');
   const [primaryVetContact, setPrimaryVetContact] = useState('');
   const [secondaryVet, setSecondaryVet] = useState('');
-  const [secondaryVetContact, setSecondaryVetContact] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+
+  useEffect(() => {
+    const fetchVetClinics = async () => {
+      try {
+        const response = await api.get('/accounts/vet-clinics/');
+        setVetClinics(response.data);
+      } catch (err) {
+        console.error("Error fetching vet clinics:", err);
+      }
+    };
+
+    fetchVetClinics();
+    }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Create the pet object with all the necessary fields
     const petData = {
-      name,
-      microchipNo,
-      typeOfPet,
-      breed,
-      age,
-      petparentcontact,
-      primaryVet,
-      primaryVetContact,
-      secondaryVet,
-      secondaryVetContact,
+      pet_name: petName,
+      microchip_no: microchipNo,
+      type_of_pet: typeOfPet,
+      breed: breed,
+      age: age,
+      pet_parent: localStorage.getItem('user_id'), //  user ID is stored in localStorage
+      pet_parent_contact: petParentContact,
+      primary_vet: primaryVet,
+      primary_vet_contact: primaryVetContact,
+      secondary_vet: secondaryVet,
     };
 
     try {
-      const response = await api.post('/pets/register/', petData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (response.data.success) {
-        setSuccess('Pet registered successfully!');
-        setError('');
-      } else {
-        setError('Failed to register pet.');
-        setSuccess('');
-      }
+      const response = await api.post('/api/register-a-pet/', petData);
+      console.log('Pet registered successfully:', response.data);
     } catch (error) {
-      setError('An error occurred during registration. Please try again.');
-      setSuccess('');
+      if (error.response) {
+        console.error('Error response:', error.response.data);
+      } else {
+        console.error('Error', error.message);
+      }
     }
   };
 
-  const petTypes = [
-    'Dog', 'Cat', 'Bird', 'Horse', 'Cow', 'Fish', 'Goat', 'Sheep', 'Snake', 'Rabbit', 'Other'
-  ];
-
-  const styles = {
-    formContainer: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: '100%',
-      maxWidth: '500px',
-      marginTop: '50px',
-    },
-  };
-
   return (
-    <section className='main-container'>
-      <section style={styles.formContainer}>
-        <form onSubmit={handleSubmit}>
-          <div className="title">
-            <h1>Register a New Pet</h1>
-          </div>
-          <div>
-            <input
-              className='form-input'
-              type="text"
-              placeholder="Pet Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-          <div>
-            <input
-              className='form-input'
-              type="text"
-              placeholder="Microchip Number"
-              value={microchipNo}
-              onChange={(e) => setMicrochipNo(e.target.value)}
-            />
-          </div>
-          <div>
-          <select
-              className='form-input'
-              value={typeOfPet}
-              onChange={(e) => setTypeOfPet(e.target.value)}
-            >
-              <option value="" disabled>Select Type of Pet</option>
-              {petTypes.map((type) => (
-                <option key={type} value={type}>{type}</option>
-              ))}
-            </select>
-            {/* <input
-              className='form-input'
-              type="text"
-              placeholder="Type of Pet"
-              value={typeOfPet}
-              onChange={(e) => setTypeOfPet(e.target.value)}
-            /> */}
-          </div>
-          <div>
-            <input
-              className='form-input'
-              type="text"
-              placeholder="Breed"
-              value={breed}
-              onChange={(e) => setBreed(e.target.value)}
-            />
-          </div>
-          <div>
-            <input
-              className='form-input'
-              type="number"
-              placeholder="Age"
-              value={age}
-              onChange={(e) => setAge(e.target.value)}
-            />
-          </div>
-          <div>
-            <input
-              className='form-input'
-              type="text"
-              placeholder="Pet Parent Contact"
-              value={petparentcontact}
-              onChange={(e) => setPetparentcontact(e.target.value)}
-            />
-          </div>
-          <div>
-            <input
-              className='form-input'
-              type="text"
-              placeholder="Primary Vet"
-              value={primaryVet}
-              onChange={(e) => setPrimaryVet(e.target.value)}
-            />
-          </div>
-          <div>
-            <input
-              className='form-input'
-              type="text"
-              placeholder="Primary Vet Contact"
-              value={primaryVetContact}
-              onChange={(e) => setPrimaryVetContact(e.target.value)}
-            />
-          </div>
-          <div>
-            <input
-              className='form-input'
-              type="text"
-              placeholder="Secondary Vet (optional)"
-              value={secondaryVet}
-              onChange={(e) => setSecondaryVet(e.target.value)}
-            />
-          </div>
-          <div>
-            <input
-              className='form-input'
-              type="text"
-              placeholder="Secondary Vet Contact (optional)"
-              value={secondaryVetContact}
-              onChange={(e) => setSecondaryVetContact(e.target.value)}
-            />
-          </div>
-          <button type="submit">Register Pet</button>
-          {error && <p style={styles.error}>{error}</p>}
-          {success && <p style={styles.success}>{success}</p>}
-        </form>
-      </section>
-    </section>
+    <div className='main-container'>
+      <form onSubmit={handleSubmit}>
+        <section className="title">
+            <h1>Register a pet</h1>
+        </section>
+        <label>Pet Name:</label>
+        <input 
+            className='form-input'
+            type="text"
+            value={petName} onChange={(e) => setPetName(e.target.value)} 
+            required 
+        />
+
+        <label>Microchip No:</label>
+        <input
+            className='form-input'
+            type="text"
+            value={microchipNo} onChange={(e) => setMicrochipNo(e.target.value)}
+            required
+        />
+
+        <label>Type of Pet:</label>
+        <select 
+            className='form-input'
+            value={typeOfPet} onChange={(e) => setTypeOfPet(e.target.value)}>
+            <option value="Dog">Dog</option>
+            <option value="Cat">Cat</option>
+            <option value="Bird">Bird</option>
+            <option value="Horse">Horse</option>
+            <option value="Cow">Cow</option>
+            <option value="Fish">Fish</option>
+            <option value="Goat">Goat</option>
+            <option value="Sheep">Sheep</option>
+            <option value="Snake">Snake</option>
+            <option value="Rabbit">Rabbit</option>
+            <option value="Other">Other</option>
+        </select>
+
+        <label>Breed:</label>
+        <input
+            className='form-input'
+            type="text"
+            value={breed} onChange={(e) => setBreed(e.target.value)} 
+            required
+        />
+
+        <label>Age:</label>
+        <input
+            className='form-input'
+            type="number" value={age} onChange={(e) => setAge(e.target.value)}
+            required 
+        />
+
+        <label>Pet Parent Contact:</label>
+        <input
+            className='form-input'
+            type="text" value={petParentContact} onChange={(e) => setPetParentContact(e.target.value)}
+            required 
+        />
+
+        <label>Primary Vet Clinic:</label>
+        <select
+            className='form-input'
+            value={primaryVet}
+            onChange={(e) => setPrimaryVet(e.target.value)}
+            required
+        >
+            <option value="" disabled>Select a Vet Clinic</option>
+            {vetClinics.map((clinic) => (
+            <option key={clinic.id} value={clinic.id}>
+                {clinic.username}
+            </option>
+            ))}
+        </select>
+     
+
+        <label>Primary Vet Contact:</label>
+        <input
+            className='form-input'
+            type="text" value={primaryVetContact} onChange={(e) => setPrimaryVetContact(e.target.value)} 
+            required 
+        />
+
+        <label>Secondary Vet Clinic:</label>
+        <select
+            className='form-input'
+            value={secondaryVet}
+            onChange={(e) => setSecondaryVet(e.target.value)}
+            required
+        >
+            <option
+                value="" disabled>Select a Secondary Vet Clinic</option>
+            {vetClinics.map((clinic) => (
+            <option key={clinic.id} value={clinic.id}>
+                {clinic.name}
+            </option>
+            ))}
+        </select>
+        <button type="submit">Register Pet</button>
+      </form>
+    </div>
   );
 };
 

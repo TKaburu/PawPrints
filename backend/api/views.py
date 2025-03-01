@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import get_user_model
-from rest_framework import status
+from rest_framework import status, generics
+from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from accounts.serializers import UserSerializer
+from accounts.serializers import CustomUserSerializer
 from .models import *
 from .serializers import *
 
@@ -57,7 +58,91 @@ def pet_detail(request, slug):
         return Response(status=status.HTTP_204_NO_CONTENT)
     else:
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-    
+
+class RegisterPetView(APIView):
+    """
+    API view to register a pet. Only authenticated pet owners can register a pet.
+    Only users with the 'vet_clinic' user type can be assigned as vets.
+    """
+    permission_classes = [IsAuthenticated]  # Ensure the user is authenticated
+
+    def post(self, request):
+        user = request.user
+
+        # Ensure the user is a pet owner
+        if user.user_type != 'pet_owner':
+            return Response(
+                {"detail": "Only pet owners can register a pet."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        # Ensure the primary and secondary vets are users with 'vet_clinic' user_type
+        primary_vet_id = request.data.get('primary_vet')
+        secondary_vet_id = request.data.get('secondary_vet')
+        
+        if primary_vet_id:
+            primary_vet = CustomUser.objects.filter(id=primary_vet_id, user_type='vet_clinic').first()
+            if not primary_vet:
+                return Response(
+                    {"detail": "Primary vet must be a vet clinic."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+        if secondary_vet_id:
+            secondary_vet = CustomUser.objects.filter(id=secondary_vet_id, user_type='vet_clinic').first()
+            if not secondary_vet:
+                return Response(
+                    {"detail": "Secondary vet must be a vet clinic."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+        # Assign the authenticated user as the pet's parent
+        data = request.data
+        data['pet_parent'] = user.id
+
+        # Serialize the pet data
+        serializer = PetSerializer(data=data)
+        
+        if serializer.is_valid():
+            serializer.save()  # Save the pet to the database
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PetOwnerPetsView(generics.ListAPIView):
+    """
+    List pets owned by the current Pet Owner.
+    """
+    serializer_class = PetSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user  # Get the current user (Pet Owner)
+        
+        # Return pets where the logged-in user is the pet parent
+        if user.user_type == 'pet_owner':
+            return Pet.objects.filter(pet_parent=user)
+        else:
+            return Pet.objects.none()  # Return empty queryset if the user is not a pet owner
+
+
+class CareProviderPetsView(generics.ListAPIView):
+    """
+    List pets that are under the care of the current Vet Clinic or Welfare Organization.
+    """
+    serializer_class = PetSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user  # Get the current user (Vet Clinic or Welfare Organization)
+        
+        # Filter pets by the logged-in user's care_provider field
+        if user.user_type in ['vet_clinic', 'welfare']:
+            return Pet.objects.filter(care_provider=user)
+        else:
+            return Pet.objects.none()  # Return empty queryset if the user is not a care provider
+
+
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -113,7 +198,7 @@ def transferPetOwnership(request, slug):
 @permission_classes([IsAuthenticated])
 def userProfile(request, username):
     profile_user = get_object_or_404(User, username=username)
-    user_serializer = UserSerializer(profile_user)
+    user_serializer = CustomUserSerializer(profile_user)
     
     profile_data = {
         'user': user_serializer.data,

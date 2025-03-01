@@ -25,3 +25,4 @@ class CustomUser(AbstractUser):
         String representation
         """
         return self.email
+    
