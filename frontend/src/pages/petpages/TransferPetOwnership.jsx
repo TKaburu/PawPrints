@@ -1,135 +1,89 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import api from '../../api/api';
-import '../../styles/transferPetOwnership.css';
 
-const TransferPetOwnership = () => {
-  const { slug } = useParams();
-  const [pet, setPet] = useState(null);
-  const [newOwnerUsername, setNewOwnerUsername] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [userExists, setUserExists] = useState(null);
-  const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useState(null);
+const TransferPetOwnership = ({ 
+    selectedPet, 
+    setShowTransferModal, 
+    transferError, 
+    setTransferError, 
+    emailFormatError, 
+    setEmailFormatError, 
+    setSuccessMessage, 
+    setPets, 
+    pets 
+}) => {
+    const [transferEmail, setTransferEmail] = useState('');
 
-  useEffect(() => {
-    const fetchPet = async () => {
-      try {
-        if (slug) {
-          const response = await api.get(`/api/pets/${slug}/`);
-          setPet(response.data);
-        }
-      } catch (error) {
-        setError('Failed to fetch pet details.');
-      }
+    const validateEmailFormat = (email) => {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return emailRegex.test(email);
     };
 
-    fetchPet();
-  }, [slug]);
+    const handleTransferOwnership = async () => {
+        // If email field is empty
+        if (!transferEmail) {
+            setTransferError("Please enter the new owner's email and try again");
+            return; // Prevent the API request if the email is empty
+        }
 
-  useEffect(() => {
-    const checkUserExists = async () => {
-      if (newOwnerUsername) {
+        // If email format is invalid
+        if (!validateEmailFormat(transferEmail)) {
+            setEmailFormatError("Please enter a valid email address.");
+            return;
+        }
+
         try {
-          const response = await api.get('/auth/check-user/', {
-            params: { username: newOwnerUsername },
-          });
-          if (response.status === 200) {
-            setUserExists(true);
-          }
+            const token = localStorage.getItem('ACCESS_TOKEN');
+            const response = await api.post(
+                `api/pet/${selectedPet.id}/transfer-ownership/`,
+                { new_owner_email: transferEmail },
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                }
+            );
+            setSuccessMessage('Ownership transferred successfully!');
+            setTransferError('');
+            setEmailFormatError('');
+            setShowTransferModal(false);
+            setPets(pets.filter(pet => pet.id !== selectedPet.id));
         } catch (error) {
-          if (error.response && error.response.status === 404) {
-            setUserExists(false);
-          } else {
-            setError('An error occurred while checking the user.');
-          }
+            if (error.response && error.response.status === 404) {
+                setTransferError("The email address you have entered is not registered. Please check and try again.");
+            } else {
+                setTransferError('Failed to transfer ownership. Please try again.');
+            }
+            setSuccessMessage('');
         }
-      } else {
-        setUserExists(null);
-      }
     };
 
-    checkUserExists();
-  }, [newOwnerUsername]);
-
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        const response = await api.get('/auth/get-user/');
-        setCurrentUser(response.data.username);
-      } catch (error) {
-        console.error('Failed to fetch current user:', error);
-      }
-    };
-
-    fetchCurrentUser();
-  }, []);
-
-  const handleTransfer = async (e) => {
-    e.preventDefault();
-    if (!userExists) {
-      setError('The new owner is not registered.');
-      return;
-    }
-
-    setLoading(true);
-    setError('');
-
-    try {
-      const response = await api.post(`/api/transfer-pet-ownership/${slug}/`, {
-        new_owner_username: newOwnerUsername,
-      });
-
-      if (response.status === 200) {
-        alert('Ownership transferred successfully');
-        if (currentUser) {
-          navigate(`/${currentUser}`);
-        } else {
-          console.error('Current user is null, cannot redirect');
-          setError('Unable to redirect to dashboard. Please try logging in again.');
-        }
-      }
-    } catch (error) {
-      console.error('Transfer error:', error);
-      setError('Failed to transfer ownership. Please try again.');
-    }
-
-    setLoading(false);
-  };
-
-  if (!pet) {
-    return <p>Loading pet details...</p>;
-  }
-
-  return (
-    <section className="main-content">
-      <div className="transfer-ownership">
-        <section className="title">
-          <h2>Transfer Ownership of {pet.name}</h2>
-        </section>
-        <form onSubmit={handleTransfer}>
-          <div>
-            <label htmlFor="newOwnerUsername">New Owner Username:</label>
-            <input
-              type="text"
-              id="newOwnerUsername"
-              value={newOwnerUsername}
-              onChange={(e) => setNewOwnerUsername(e.target.value)}
-              required
-            />
-            {userExists === false && (
-              <p className="error">This user is not registered.</p>
-            )}
-          </div>
-          <button type="submit" disabled={loading || userExists === false}>
-            {loading ? 'Transferring...' : 'Transfer Ownership'}
-          </button>
-          {error && <p className="error">{error}</p>}
-        </form>
-      </div>
-    </section>
-  );
+    return (
+        <div className="transfer-modal-overlay">
+            <div className="transfer-modal-content">
+                <h3>Transfer Ownership of {selectedPet.pet_name}</h3>
+                <p className="description">The new pet owner needs to be registered for the transfer of ownership</p>
+                {transferError && <p style={{ color: 'red', marginTop: '10px' }}>{transferError}</p>}
+                {emailFormatError && <p style={{ color: 'red', marginTop: '10px' }}>{emailFormatError}</p>}
+                
+                <input
+                    className="form-input"
+                    type="email"
+                    placeholder="New Owner's Email"
+                    value={transferEmail}
+                    onChange={(e) => setTransferEmail(e.target.value)}
+                    onFocus={() => {
+                        setTransferError('');
+                        setEmailFormatError('');
+                    }}
+                />
+                <section className="doubl-btn">
+                    <button onClick={handleTransferOwnership}>Transfer Ownership</button>
+                    <button onClick={() => setShowTransferModal(false)}>Cancel</button>
+                </section>
+            </div>
+        </div>
+    );
 };
 
 export default TransferPetOwnership;

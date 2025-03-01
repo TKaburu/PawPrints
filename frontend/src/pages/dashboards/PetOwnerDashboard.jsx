@@ -2,12 +2,18 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ACCESS_TOKEN } from "../../constants";
 import api from "../../api/api";
+import TransferPetOwnership from '../petpages/TransferPetOwnership';
 import '../../styles/petownerdashboard.css';
 
 const PetOwnerDashboard = () => {
     const [username, setUsername] = useState('');
     const [pets, setPets] = useState([]);
     const [error, setError] = useState('');
+    const [selectedPet, setSelectedPet] = useState(null);
+    const [showTransferModal, setShowTransferModal] = useState(false);
+    const [successMessage, setSuccessMessage] = useState('');
+    const [transferError, setTransferError] = useState('');
+    const [emailFormatError, setEmailFormatError] = useState('');
 
     useEffect(() => {
         const fetchUsername = async () => {
@@ -45,11 +51,17 @@ const PetOwnerDashboard = () => {
         }
     }, [username]);
 
+    const handleTransferClick = (pet) => {
+        setSelectedPet(pet);
+        setShowTransferModal(true);
+    };
+
     return (
         <section className="main-container">
             <section className="dashboard">
                 <section className="pet-list">
                     {error && <p>{error}</p>}
+                    {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
                     {pets.length === 0 ? (
                         <section className="title">
                             <h1>You have no pets. <span><Link to={`/register-pet`}>Register one</Link></span> today!</h1>
@@ -66,6 +78,7 @@ const PetOwnerDashboard = () => {
                                         <p>Type of pet: {pet.type_of_pet}</p>
                                         <p>Breed: {pet.breed}</p>
                                         <p>Age: {pet.age} years old</p>
+                                        <button onClick={() => handleTransferClick(pet)}>Transfer Ownership</button>
                                     </section>
                                 ))}
                             </div>
@@ -73,6 +86,21 @@ const PetOwnerDashboard = () => {
                     )}
                 </section>
             </section>
+
+            {/* Pass transferError and emailFormatError props to TransferPetOwnership */}
+            {showTransferModal && (
+                <TransferPetOwnership
+                    selectedPet={selectedPet}
+                    setShowTransferModal={setShowTransferModal}
+                    transferError={transferError}
+                    setTransferError={setTransferError}
+                    emailFormatError={emailFormatError}
+                    setEmailFormatError={setEmailFormatError}
+                    setSuccessMessage={setSuccessMessage}
+                    setPets={setPets}
+                    pets={pets}
+                />
+            )}
         </section>
     );
 };

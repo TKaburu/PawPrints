@@ -8,5 +8,5 @@ urlpatterns = [
 
     # ------------------------------- Pet Ownership Views ------------------------------- #
     path('register-a-pet/', RegisterPetView.as_view(), name='register_pet'),
-    path('current-users-pets', PetOwnerPetsView.as_view(), name='current_users_pets'),
+    path('pet/<int:pet_id>/transfer-ownership/', TransferPetOwnership.as_view(), name='transfer_pet_ownership'),
 ]

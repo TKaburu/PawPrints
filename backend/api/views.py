@@ -108,24 +108,6 @@ class RegisterPetView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-class PetOwnerPetsView(generics.ListAPIView):
-    """
-    List pets owned by the current Pet Owner.
-    """
-    serializer_class = PetSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        user = self.request.user  # Get the current user (Pet Owner)
-        
-        # Return pets where the logged-in user is the pet parent
-        if user.user_type == 'pet_owner':
-            return Pet.objects.filter(pet_parent=user)
-        else:
-            return Pet.objects.none()  # Return empty queryset if the user is not a pet owner
-
-
 class CareProviderPetsView(generics.ListAPIView):
     """
     List pets that are under the care of the current Vet Clinic or Welfare Organization.
@@ -142,7 +124,38 @@ class CareProviderPetsView(generics.ListAPIView):
         else:
             return Pet.objects.none()  # Return empty queryset if the user is not a care provider
 
+class TransferPetOwnership(APIView):
+    permission_classes = [IsAuthenticated]
 
+    def post(self, request, pet_id):
+        try:
+            # Retrieve the pet instance by ID
+            pet = Pet.objects.get(id=pet_id)
+        except Pet.DoesNotExist:
+            return Response({'detail': 'Pet not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Check if the current user is the owner of the pet
+        if pet.pet_parent != request.user:
+            return Response({'detail': 'You are not the current owner of this pet.'}, status=status.HTTP_403_FORBIDDEN)
+
+        # Retrieve the new owner's email address from the request data
+        new_owner_email = request.data.get('new_owner_email')
+        if not new_owner_email:
+            return Response({'detail': 'New owner email is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # Ensure the new owner is a valid user with 'pet_owner' user type
+            new_owner = CustomUser.objects.get(email=new_owner_email, user_type='pet_owner')
+        except CustomUser.DoesNotExist:
+            return Response({'detail': 'New owner not found or invalid user type.'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Transfer the pet to the new owner
+        pet.pet_parent = new_owner
+        pet.save()
+
+        # Return the updated pet data
+        serializer = PetSerializer(pet)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 @permission_classes([AllowAny])

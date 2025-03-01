@@ -38,7 +38,7 @@ const Layout = () => {
     <>
       <Navbar />
       {/* {!hideNavbarRoutes.includes(location.pathname) && <Navbar />} */}
-      <section className="main-content">
+      <section>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<AuthForm />} />

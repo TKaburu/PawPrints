@@ -47,4 +47,4 @@ class Pet(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.name
+        return self.pet_name
