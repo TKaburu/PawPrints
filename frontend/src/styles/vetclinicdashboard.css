@@ -1,0 +1,45 @@
+.pet-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.pet-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, border 0.3s ease;
+}
+
+.pet-card:hover {
+    border: 2px solid var(--accent-color);
+    transform: scale(1.05);
+}
+
+
+.pet-card h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.pet-card p {
+    font-size: 1rem;
+    color: var(--text-color);
+    margin-bottom: 5px;
+}
+
+/* Make the grid responsive (stack items on smaller screens) */
+@media (max-width: 768px) {
+    .pet-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .pet-cards-grid {
+        grid-template-columns: 1fr;
+    }
+}
