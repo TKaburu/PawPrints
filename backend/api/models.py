@@ -20,7 +20,7 @@ class Pet(models.Model):
         ('Rabbit', 'Rabbit'),
         ('Other', 'Other'),
     )
-    microchip_no = models.CharField(max_length=100)
+    microchip_no = models.CharField(max_length=100, unique=True)
     pet_name = models.CharField(max_length=100)
     type_of_pet = models.CharField(max_length=100, choices=PET_TYPE, default='Dog')
     breed = models.CharField(max_length=100, blank=True, null=True)
