@@ -14,6 +14,7 @@ const PetOwnerDashboard = () => {
     const [successMessage, setSuccessMessage] = useState('');
     const [transferError, setTransferError] = useState('');
     const [emailFormatError, setEmailFormatError] = useState('');
+    const [vetClinics, setVetClinics] = useState({});
 
     useEffect(() => {
         const fetchUsername = async () => {
@@ -30,6 +31,27 @@ const PetOwnerDashboard = () => {
         };
 
         fetchUsername();
+    }, []);
+
+    useEffect(() => {
+        const fetchVetClinics = async () => {
+            try {
+                const response = await api.get('accounts/vet-clinics/', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem(ACCESS_TOKEN)}`,
+                    },
+                });
+                const clinics = response.data.reduce((acc, clinic) => {
+                    acc[clinic.id] = clinic.username;
+                    return acc;
+                }, {});
+                setVetClinics(clinics);
+            } catch (error) {
+                console.error('Failed to fetch vet clinics:', error);
+            }
+        };
+
+        fetchVetClinics();
     }, []);
 
     useEffect(() => {
@@ -78,6 +100,9 @@ const PetOwnerDashboard = () => {
                                         <p>Type of pet: {pet.type_of_pet}</p>
                                         <p>Breed: {pet.breed}</p>
                                         <p>Age: {pet.age} years old</p>
+                                        {/* Display username of the vet clinic */}
+                                        <p>Vet Clinic: {vetClinics[pet.primary_vet] || 'Loading...'}</p>
+                                        <p>Clinics Contact: {pet.primary_vet_contact}</p>
                                         <button onClick={() => handleTransferClick(pet)}>Transfer Ownership</button>
                                     </section>
                                 ))}
