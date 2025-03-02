@@ -13,7 +13,7 @@ class CustomUser(AbstractUser):
         ('admin', 'Admin'),
     ]
     email = models.EmailField(unique=True)
-    user_type = models.CharField(max_length=20, choices=USER_TYPE, default='pet_owner')
+    user_type = models.CharField(max_length=20, choices=USER_TYPE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
