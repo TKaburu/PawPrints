@@ -81,8 +81,6 @@ const AuthForm = () => {
   return (
     <>
     <section className="main-container">
-    <div>
-      
       <form onSubmit={handleSubmit}>
         <section className="title">
           <h1>{isRegister ? 'Register' : 'Login'}</h1>
@@ -169,8 +167,6 @@ const AuthForm = () => {
         </p>
         <button type="submit">{isRegister ? 'Register' : 'Login'}</button>
       </form>
-      
-    </div>
     </section>
     
     
