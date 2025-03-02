@@ -11,54 +11,6 @@ from .serializers import *
 
 User = get_user_model()
 
-@api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])
-def pets(request):
-    """
-    This function returns a list of all pets in the database or creates a new pet.
-    """
-    if request.method == 'GET':
-        pets = Pet.objects.all()
-        serializer = PetSerializer(pets, many=True)
-        return Response(serializer.data)
-    elif request.method == 'POST':
-        serializer = PetSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(pet_parent_name=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    else:
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-
-@api_view(['GET', 'PUT', 'DELETE'])
-def pet_detail(request, slug):
-    """
-    This function retrieves, updates, or deletes a pet instance.
-    args:
-        slug: str
-    """
-    try:
-        pet = Pet.objects.get(slug=slug)
-    except Pet.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'GET':
-        serializer = PetSerializer(pet)
-        return Response(serializer.data)
-    elif request.method == 'PUT':
-        serializer = PetSerializer(pet, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'DELETE':
-        pet.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-    else:
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
 class RegisterPetView(APIView):
     """
     API view to register a pet. Only authenticated pet owners can register a pet.
@@ -108,21 +60,55 @@ class RegisterPetView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class CareProviderPetsView(generics.ListAPIView):
-    """
-    List pets that are under the care of the current Vet Clinic or Welfare Organization.
-    """
-    serializer_class = PetSerializer
-    permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        user = self.request.user  # Get the current user (Vet Clinic or Welfare Organization)
-        
-        # Filter pets by the logged-in user's care_provider field
-        if user.user_type in ['vet_clinic', 'welfare']:
-            return Pet.objects.filter(care_provider=user)
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+def pets(request):
+    """
+    This function returns a list of all pets in the database or creates a new pet.
+    """
+    if request.method == 'GET':
+        pets = Pet.objects.all()
+        serializer = PetSerializer(pets, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = PetSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(pet_parent_name=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Pet.objects.none()  # Return empty queryset if the user is not a care provider
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def pet_detail(request, slug):
+    """
+    This function retrieves, updates, or deletes a pet instance.
+    args:
+        slug: str
+    """
+    try:
+        pet = Pet.objects.get(slug=slug)
+    except Pet.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = PetSerializer(pet)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = PetSerializer(pet, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        pet.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    else:
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
 
 class TransferPetOwnership(APIView):
     permission_classes = [IsAuthenticated]
@@ -158,16 +144,16 @@ class TransferPetOwnership(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
 
-@api_view(['GET'])
-@permission_classes([AllowAny])
-def petSearch(request, search):
+class PetSearchView(APIView):
     """
-    This function searches for a pet by name.
-    args:
-        search: str
+    Api view to search for a pet by its microchip number.
     """
-    print(f"Search query: {search}")
-    if request.method == 'GET':
+    permission_classes = [AllowAny]
+
+    def get(self, request, search=None):
+        """
+        Search for a pet by its microchip number.
+        """
         if search:
             pets = Pet.objects.filter(microchip_no__icontains=search)
             if pets.exists():
@@ -175,12 +161,14 @@ def petSearch(request, search):
                 return Response(serializer.data)
             else:
                 return Response(
-                    {'error': 'No pet with that number found'}, status=status.HTTP_404_NOT_FOUND)
+                    {'error': 'No pet with that number found'}, 
+                    status=status.HTTP_404_NOT_FOUND
+                )
         else:
             return Response(
-                {'error': 'Please provide a microchip number'}, status=status.HTTP_400_BAD_REQUEST)
-    else:
-        return Response({'error': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+                {'error': 'Please provide a microchip number'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )    
 
 
 class CheckMicrochipExistsView(APIView):

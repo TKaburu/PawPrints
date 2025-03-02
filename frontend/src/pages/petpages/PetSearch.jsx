@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { searchPetByMicrochip } from "../../api/apiService";
+import { ACCESS_TOKEN } from "../../constants";
+import api from "../../api/api";
 import "../../styles/petSearch.css";
 
 const PetSearch = () => {
@@ -7,15 +9,39 @@ const PetSearch = () => {
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const [searched, setSearched] = useState(false); // New state to track if search has been performed
+  const [vetClinics, setVetClinics] = useState({});
+
+  useEffect(() => {
+    const fetchVetClinics = async () => {
+        try {
+            const response = await api.get('accounts/vet-clinics/', {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem(ACCESS_TOKEN)}`,
+                },
+            });
+            const clinics = response.data.reduce((acc, clinic) => {
+                acc[clinic.id] = clinic.username;
+                return acc;
+            }, {});
+            setVetClinics(clinics);
+        } catch (error) {
+            console.error('Failed to fetch vet clinics:', error);
+        }
+    };
+
+    fetchVetClinics();
+  }, []);
+
+
 
   const handleSearch = async () => {
     setSearched(true); // Set searched to true when search is performed
-    
+
     if (!microchipNo) {
       setError('Please enter a valid microchip number.');
       return;
     }
-    
+
     try {
       const data = await searchPetByMicrochip(microchipNo);
       console.log("API Response:", data);
@@ -52,8 +78,14 @@ const PetSearch = () => {
         <div className="search-btn">
           <button onClick={handleSearch}>Search</button>
         </div>
+        <p className="description">
+          <b>
+            Please contact the Vet Clinic to reunit the pet with the owner!
+          </b>
+        </p>
         <section className={`search-results ${searched ? "show-results" : ""}`}>
           {error && <p>{error}</p>}
+          
           {result && (
             <div className="pet-results">
               <div className="title">
@@ -63,19 +95,11 @@ const PetSearch = () => {
                 {result.map((pet, slug) => (
                   <div key={slug}>
                     <section className="pet-details">
-                      <p>Name: {pet.pet_name}</p>
-                      <p>Owner: {pet.pet_parent.username}</p>
-                      <p>Primary Vet: {pet.primary_vet ? pet.primary_vet.username : 'N/A'}</p>
-                      <p>Vet Clinic Contact: {pet.primary_vet_contact}</p>
-
-                      {pet.secondary_vet && (
-                        <>
-                          <p>Secondary Vet: {pet.secondary_vet.username}</p>
-                          <p>Contact: {pet.secondary_vet_contact}</p>
-                        </>
-                      )}
+                      <p>Name of the pet: <b>{pet.pet_name}</b></p>
+                      <p> {pet.pet_name}'s Vet Clinic: <b>{vetClinics[pet.primary_vet] }</b></p>
+                      <p>Clinics Contact: <b>{pet.primary_vet_contact}</b></p>
                     </section>
-                    
+
                   </div>
                 ))}
               </section>
