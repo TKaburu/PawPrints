@@ -101,7 +101,7 @@ const PetOwnerDashboard = () => {
                                         <p>Breed: {pet.breed}</p>
                                         <p>Age: {pet.age} years old</p>
                                         {/* Display username of the vet clinic */}
-                                        <p>Vet Clinic: {vetClinics[pet.primary_vet] || 'Loading...'}</p>
+                                        <p>Vet Clinic: {vetClinics[pet.primary_vet] }</p>
                                         <p>Clinics Contact: {pet.primary_vet_contact}</p>
                                         <button onClick={() => handleTransferClick(pet)}>Transfer Ownership</button>
                                     </section>

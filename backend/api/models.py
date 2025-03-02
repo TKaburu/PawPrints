@@ -33,11 +33,11 @@ class Pet(models.Model):
         blank=True, related_name='primary_vets'
     )
     primary_vet_contact = models.CharField(max_length=100)
-    secondary_vet = models.ForeignKey(
-        CustomUser, on_delete=models.SET_NULL, null=True,
-        blank=True, related_name='secondary_vets'
-    )
-    secondary_vet_contact = models.CharField(max_length=100, blank=True, null=True)
+    # secondary_vet = models.ForeignKey(
+    #     CustomUser, on_delete=models.SET_NULL, null=True,
+    #     blank=True, related_name='secondary_vets'
+    # )
+    # secondary_vet_contact = models.CharField(max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
