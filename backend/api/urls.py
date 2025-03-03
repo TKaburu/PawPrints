@@ -9,10 +9,10 @@ urlpatterns = [
     path('register-a-pet/', RegisterPetView.as_view(), name='register_pet'),
     path('pets/<slug:slug>/', PetDetailsView.as_view(), name='pet_detail'),
     path('pets/<slug:slug>/update/', UpdatePetInforView.as_view(), name='update_pet_info'),
-    path('pets/<int:pk>/delete/', DeletePetView.as_view(), name='delete_pet'),
+    path('pets/<slug:slug>/delete/', DeletePetView.as_view(), name='delete_pet'),
 
     # ------------------------------- Pet Search Views ------------------------------- #
-    
+
     path('search/<str:search>/', PetSearchView.as_view(), name='pet_search'),
 
     # ------------------------------- Pet Ownership Views ------------------------------- #

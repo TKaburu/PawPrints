@@ -112,14 +112,8 @@ button:hover {
 }
 
 
-
-.double-btn {
-  display: flex;
-  justify-content: space-between;
-}
-
 .title {
-  font-size: 2rem;
+  font-size: 3rem;
   color: var(--accent-color);
   text-align: center;
 }

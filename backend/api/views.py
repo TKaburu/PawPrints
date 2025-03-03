@@ -101,6 +101,20 @@ class DeletePetView(generics.DestroyAPIView):
     serializer_class = PetSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_object(self):
+        """
+        Gets the pet object by its slug.
+        """
+        return get_object_or_404(Pet, slug=self.kwargs['slug'])
+
+    def delete(self, request, *args, **kwargs):
+        """
+        Deletes a pet object and returns a success response.
+        """
+        pet = self.get_object()
+        pet.delete()
+        return Response({"message": "Pet deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+    
 
 class TransferPetOwnership(APIView):
     permission_classes = [IsAuthenticated]

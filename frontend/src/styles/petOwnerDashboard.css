@@ -1,4 +1,4 @@
-.transfer-modal-overlay {
+.modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -12,7 +12,7 @@
 }
 
 /* The modal content container */
-.transfer-modal-content {
+.modal-content {
   background-color: white;
   padding: 20px;
   border-radius: 8px;
@@ -21,7 +21,7 @@
   text-align: center;
 }
 
-.transfer-modal-content h3 {
+.modal-content h3 {
   margin-bottom: 20px;
 }
 
@@ -30,7 +30,7 @@
   color: var(--text-color);
 }
 
-.transfer-modal-content input {
+.modal-content input {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
@@ -38,7 +38,7 @@
   border-radius: 5px;
 }
 
-.transfer-modal-content button {
+.modal-content button {
   padding: 10px 20px;
   margin: 10px;
   border: none;
@@ -48,15 +48,9 @@
   transition: background-color 0.3s;
 }
 
-.transfer-modal-content button:hover {
+.modal-content button:hover {
   background-color: var(--accent-color-dark);
 }
-
-.doubl-btn {
-  display: flex;
-  /* flex-direction: column; */
-}
-
 
 /* Responsive Design */
 @media (max-width: 768px) {

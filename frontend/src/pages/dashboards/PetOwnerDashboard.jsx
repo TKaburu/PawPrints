@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ACCESS_TOKEN } from "../../constants";
 import api from "../../api/api";
 import TransferPetOwnership from '../petpages/TransferPetOwnership';
+import DeletePetModal from '../petpages/DeletePetModal';
 import '../../styles/petownerdashboard.css';
 
 const PetOwnerDashboard = () => {
@@ -12,16 +13,17 @@ const PetOwnerDashboard = () => {
     const [selectedPet, setSelectedPet] = useState(null);
     const [showTransferModal, setShowTransferModal] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
-    const [transferError, setTransferError] = useState('');
-    const [emailFormatError, setEmailFormatError] = useState('');
     const [vetClinics, setVetClinics] = useState({});
+    const [isDeleteModalOpen, setShowDeleteModal] = useState(false);  // use state for modal visibility
+    const [petToDelete, setPetToDelete] = useState(null);
 
     useEffect(() => {
         const fetchUsername = async () => {
             try {
+                const token = localStorage.getItem(ACCESS_TOKEN);
                 const response = await api.get('accounts/current-user-details/', {
                     headers: {
-                        'Authorization': `Bearer ${localStorage.getItem(ACCESS_TOKEN)}`,
+                        'Authorization': `Bearer ${token}`,
                     },
                 });
                 setUsername(response.data.username);
@@ -36,9 +38,10 @@ const PetOwnerDashboard = () => {
     useEffect(() => {
         const fetchVetClinics = async () => {
             try {
+                const token = localStorage.getItem(ACCESS_TOKEN);
                 const response = await api.get('accounts/vet-clinics/', {
                     headers: {
-                        'Authorization': `Bearer ${localStorage.getItem(ACCESS_TOKEN)}`,
+                        'Authorization': `Bearer ${token}`,
                     },
                 });
                 const clinics = response.data.reduce((acc, clinic) => {
@@ -58,9 +61,10 @@ const PetOwnerDashboard = () => {
         if (username) {
             const fetchPets = async () => {
                 try {
+                    const token = localStorage.getItem(ACCESS_TOKEN);
                     const response = await api.get(`accounts/dashboard/pet-owner/${username}/`, {
                         headers: {
-                            'Authorization': `Bearer ${localStorage.getItem(ACCESS_TOKEN)}`,
+                            'Authorization': `Bearer ${token}`,
                         },
                     });
                     setPets(response.data);
@@ -76,6 +80,11 @@ const PetOwnerDashboard = () => {
     const handleTransferClick = (pet) => {
         setSelectedPet(pet);
         setShowTransferModal(true);
+    };
+
+    const handleDeleteClick = (pet) => {
+        setPetToDelete(pet);  // Set the pet to be deleted
+        setShowDeleteModal(true);  // Open the confirmation modal
     };
 
     return (
@@ -100,16 +109,16 @@ const PetOwnerDashboard = () => {
                                         <p>Type of pet: {pet.type_of_pet}</p>
                                         <p>Breed: {pet.breed}</p>
                                         <p>Age: {pet.age} years old</p>
-                                        {/* Display username of the vet clinic */}
                                         <p>Vet Clinic: {vetClinics[pet.primary_vet]}</p>
                                         <p>Clinics Contact: {pet.primary_vet_contact}</p>
-
-                                        {/* Edit Button linking to the Edit Pet Info page */}
+                                        <section className="double-buttons">
                                         <Link to={`/edit-pet-info/${pet.slug}`}>
-                                            <button>Edit Pet Info</button>
+                                            <button>Edit Pet</button>
                                         </Link>
-
                                         <button onClick={() => handleTransferClick(pet)}>Transfer Ownership</button>
+                                        <button onClick={() => handleDeleteClick(pet)}>Delete</button>
+                                        </section>
+                                    
                                     </section>
                                 ))}
                             </div>
@@ -118,18 +127,26 @@ const PetOwnerDashboard = () => {
                 </section>
             </section>
 
-            {/* Pass transferError and emailFormatError props to TransferPetOwnership */}
+            {/* Transfer Modal */}
             {showTransferModal && (
                 <TransferPetOwnership
                     selectedPet={selectedPet}
                     setShowTransferModal={setShowTransferModal}
-                    transferError={transferError}
-                    setTransferError={setTransferError}
-                    emailFormatError={emailFormatError}
-                    setEmailFormatError={setEmailFormatError}
+                    successMessage={successMessage}
                     setSuccessMessage={setSuccessMessage}
                     setPets={setPets}
                     pets={pets}
+                />
+            )}
+
+            {/* Delete Confirmation Modal */}
+            {isDeleteModalOpen && petToDelete && (
+                <DeletePetModal
+                    pet={petToDelete}
+                    setPets={setPets}
+                    setShowDeleteModal={setShowDeleteModal}
+                    setError={setError}
+                    setSuccessMessage={setSuccessMessage}
                 />
             )}
         </section>
