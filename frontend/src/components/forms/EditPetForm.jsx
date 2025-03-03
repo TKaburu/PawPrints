@@ -35,8 +35,7 @@ const EditPetForm = () => {
                 setError('Failed to fetch vet clinics');
             }
         };
-
-        // Fetch the current pet details
+        
         const fetchPetDetails = async () => {
             try {
                 const response = await api.get(`/api/pets/${slug}/`, {

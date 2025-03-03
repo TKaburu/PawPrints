@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom"; // Import Link component
+import { Link } from "react-router-dom";
 import { ACCESS_TOKEN } from "../../constants";
 import api from "../../api/api";
 import TransferPetOwnership from '../petpages/TransferPetOwnership';
