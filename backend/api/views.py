@@ -61,53 +61,45 @@ class RegisterPetView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])
-def pets(request):
+class PetsListView(generics.ListAPIView):
     """
-    This function returns a list of all pets in the database or creates a new pet.
+    API view to list all pets in the database.
     """
-    if request.method == 'GET':
-        pets = Pet.objects.all()
-        serializer = PetSerializer(pets, many=True)
-        return Response(serializer.data)
-    elif request.method == 'POST':
-        serializer = PetSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(pet_parent_name=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    else:
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    queryset = Pet.objects.all()
+    serializer_class = PetSerializer
+    permission_classes = [IsAuthenticated]
+
+class PetDetailsView(generics.RetrieveAPIView):
+    """
+    API view to retrieve a pet's details by ID.
+    """
+    queryset = Pet.objects.all()
+    serializer_class = PetSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return get_object_or_404(Pet, slug=self.kwargs['slug'])
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
-def pet_detail(request, slug):
+class UpdatePetInforView(generics.UpdateAPIView):
     """
-    This function retrieves, updates, or deletes a pet instance.
-    args:
-        slug: str
+    API view to update a pet's information.
     """
-    try:
-        pet = Pet.objects.get(slug=slug)
-    except Pet.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+    queryset = Pet.objects.all()
+    serializer_class = PetSerializer
+    permission_classes = [IsAuthenticated]
 
-    if request.method == 'GET':
-        serializer = PetSerializer(pet)
-        return Response(serializer.data)
-    elif request.method == 'PUT':
-        serializer = PetSerializer(pet, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'DELETE':
-        pet.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-    else:
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    def get_object(self):
+        return get_object_or_404(Pet, slug=self.kwargs['slug'])
+
+
+class DeletePetView(generics.DestroyAPIView):
+    """
+    API view to delete a pet by ID.
+    """
+    queryset = Pet.objects.all()
+    serializer_class = PetSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class TransferPetOwnership(APIView):
@@ -182,34 +174,3 @@ class CheckMicrochipExistsView(APIView):
 
         return Response({"exists": exists}, status=status.HTTP_200_OK)
 
-
-# ------------------------------- Dashboard Views ------------------------------- #
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def userProfile(request, username):
-    profile_user = get_object_or_404(User, username=username)
-    user_serializer = CustomUserSerializer(profile_user)
-    
-    profile_data = {
-        'user': user_serializer.data,
-        # Include other user data here
-    }
-    
-    if profile_user.user_type == 'PET_OWNER':
-        pets = Pet.objects.filter(owner=profile_user)
-        pet_serializer = PetSerializer(pets, many=True)
-        profile_data.update({
-            'pets': pet_serializer.data,
-            'pet_count': pets.count()
-        })
-    elif profile_user.user_type == 'VET':
-        pets = Pet.objects.filter(vet=profile_user)
-        pet_serializer = PetSerializer(pets, many=True)
-        profile_data.update({
-            'pets_under_care': pet_serializer.data,
-            'pets_count': pets.count()
-        })
-    else:
-        profile_data['message'] = 'User type not specified'
-    
-    return Response(profile_data, status=status.HTTP_200_OK)
