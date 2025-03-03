@@ -77,6 +77,42 @@ button:hover {
   background-color: var(--accent-color-dark);
 }
 
+/* Styling for double buttons  */
+
+.double-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-start;
+}
+
+.save-btn {
+  background-color: var(--accent-color);
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.save-btn:hover {
+  background-color: var(--accent-color-dark); 
+}
+
+.cancel-btn {
+  background-color: var(--accent-color-dark);
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.cancel-btn:hover {
+  background-color: var(--accent-color); 
+}
+
+
+
 .double-btn {
   display: flex;
   justify-content: space-between;

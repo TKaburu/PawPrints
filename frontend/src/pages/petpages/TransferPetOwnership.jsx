@@ -77,9 +77,9 @@ const TransferPetOwnership = ({
                         setEmailFormatError('');
                     }}
                 />
-                <section className="doubl-btn">
-                    <button onClick={handleTransferOwnership}>Transfer Ownership</button>
-                    <button onClick={() => setShowTransferModal(false)}>Cancel</button>
+                <section className="double-buttons ">
+                    <button className="save-btn" onClick={handleTransferOwnership}>Transfer Ownership</button>
+                    <button  className="cancel-btn" onClick={() => setShowTransferModal(false)}>Cancel</button>
                 </section>
             </div>
         </div>
