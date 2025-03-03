@@ -1,5 +1,6 @@
 // ------------------------------- Auth Components ------------------------------- #
 export {default as AuthForm} from './forms/AuthForm';
+export {default as EditPetForm} from './forms/EditPetForm';
 export {default as ProtectedRoute} from './ProtectedRoute';
 
 // ------------------------------- Home Components ------------------------------- #

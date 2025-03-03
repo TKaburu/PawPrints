@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom"; // Import Link component
 import { ACCESS_TOKEN } from "../../constants";
 import api from "../../api/api";
 import TransferPetOwnership from '../petpages/TransferPetOwnership';
@@ -101,8 +101,14 @@ const PetOwnerDashboard = () => {
                                         <p>Breed: {pet.breed}</p>
                                         <p>Age: {pet.age} years old</p>
                                         {/* Display username of the vet clinic */}
-                                        <p>Vet Clinic: {vetClinics[pet.primary_vet] }</p>
+                                        <p>Vet Clinic: {vetClinics[pet.primary_vet]}</p>
                                         <p>Clinics Contact: {pet.primary_vet_contact}</p>
+
+                                        {/* Edit Button linking to the Edit Pet Info page */}
+                                        <Link to={`/edit-pet-info/${pet.slug}`}>
+                                            <button>Edit Pet Info</button>
+                                        </Link>
+
                                         <button onClick={() => handleTransferClick(pet)}>Transfer Ownership</button>
                                     </section>
                                 ))}

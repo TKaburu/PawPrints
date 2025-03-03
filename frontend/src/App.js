@@ -11,6 +11,7 @@ import {
   ProtectedRoute,
   Footer,
   AuthForm,
+  EditPetForm,
 } from "./components";
 
 import {
@@ -89,6 +90,15 @@ const Layout = () => {
             element={
               <ProtectedRoute>
                 <RegisterPet />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/edit-pet-info/:slug"
+            element={
+              <ProtectedRoute>
+                <EditPetForm />
               </ProtectedRoute>
             }
           />
