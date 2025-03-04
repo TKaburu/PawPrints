@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from rest_framework import generics, status
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated, AllowAny 
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from .models import CustomUser
 from .serializers import *
 from api.models import Pet
@@ -46,7 +46,7 @@ class UserDetailView(generics.RetrieveAPIView):
         user = get_object_or_404(CustomUser, username=username)
         return user
     
-class GetUserView(generics.RetrieveAPIView):
+class GetCurrentUserView(generics.RetrieveAPIView):
     """
     Get the details of the currently logged-in user.
     """
@@ -56,6 +56,28 @@ class GetUserView(generics.RetrieveAPIView):
 
     def get_object(self):
         return self.request.user
+    
+class PetOwnerView(APIView):
+    """
+    This view checks if a user is a pet owner based on their email.
+    """
+
+    def get(self, request, format=None):
+        # Get the email from the query parameters
+        email = request.query_params.get('email')
+
+        if not email:
+            return Response({"error": "Email is required"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            user = CustomUser.objects.get(email=email)
+            # Check if the user owns any pets by filtering Pet objects where the pet_parent is the user
+            is_pet_owner = Pet.objects.filter(pet_parent=user).exists()
+
+            return Response({"isPetOwner": is_pet_owner})
+        
+        except CustomUser.DoesNotExist:
+            return Response({"isPetOwner": False}, status=status.HTTP_404_NOT_FOUND)
 
 
 class VetClinicsListView(generics.ListAPIView):

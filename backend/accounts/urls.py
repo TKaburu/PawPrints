@@ -14,7 +14,9 @@ urlpatterns = [
     # ------------------------------------------------------------ User ------------------------------------------------------------
     path('get-all-users/', GetAllUsersView.as_view(), name='users'),
     path('user-details/', UserDetailView.as_view(), name='user-detail'),
-    path('current-user-details/', GetUserView.as_view(), name='user'),
+    path('current-user-details/', GetCurrentUserView.as_view(), name='user'),
+
+    path('users/check-pet-owner/', PetOwnerView.as_view(), name='check-pet-owner'),
 
     path('vet-clinics/', VetClinicsListView.as_view(), name='vet-clinics'),
 
