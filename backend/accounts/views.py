@@ -18,6 +18,11 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = CustomUserSerializer
     permission_classes = [AllowAny]
 
+    def perform_create(self, serializer):
+        # You can perform additional validation here if needed
+        user = serializer.save()
+        return user
+
 # -------------------------------------------- User Views --------------------------------------------
     
 class GetAllUsersView(generics.ListAPIView):
@@ -87,7 +92,7 @@ class VetClinicDashboardView(generics.ListAPIView):
     def get_queryset(self):
         username = self.kwargs['username']
         user = get_object_or_404(CustomUser, username=username)
-        pets = Pet.objects.filter(primary_vet=user) | Pet.objects.filter(secondary_vet=user)
+        pets = Pet.objects.filter(primary_vet=user)
         return pets
     
 class WelfareOrganizationDashboardView(generics.ListAPIView):
