@@ -5,7 +5,7 @@ const TransferPetOwnership = ({
     selectedPet, 
     setShowTransferModal, 
     transferError, 
-    setTransferError, 
+    setTransferError,
     emailFormatError, 
     setEmailFormatError, 
     setSuccessMessage, 
@@ -20,13 +20,11 @@ const TransferPetOwnership = ({
     };
 
     const handleTransferOwnership = async () => {
-        // If email field is empty
         if (!transferEmail) {
             setTransferError("Please enter the new owner's email and try again");
             return; // Prevent the API request if the email is empty
         }
 
-        // If email format is invalid
         if (!validateEmailFormat(transferEmail)) {
             setEmailFormatError("Please enter a valid email address.");
             return;
@@ -59,8 +57,8 @@ const TransferPetOwnership = ({
     };
 
     return (
-        <div className="transfer-modal-overlay">
-            <div className="transfer-modal-content">
+        <div className="modal-overlay">
+            <div className="modal-content">
                 <h3>Transfer Ownership of {selectedPet.pet_name}</h3>
                 <p className="description">The new pet owner needs to be registered for the transfer of ownership</p>
                 {transferError && <p style={{ color: 'red', marginTop: '10px' }}>{transferError}</p>}
@@ -77,9 +75,9 @@ const TransferPetOwnership = ({
                         setEmailFormatError('');
                     }}
                 />
-                <section className="double-buttons ">
+                <section className="double-buttons">
                     <button className="save-btn" onClick={handleTransferOwnership}>Transfer Ownership</button>
-                    <button  className="cancel-btn" onClick={() => setShowTransferModal(false)}>Cancel</button>
+                    <button className="cancel-btn" onClick={() => setShowTransferModal(false)}>Cancel</button>
                 </section>
             </div>
         </div>
