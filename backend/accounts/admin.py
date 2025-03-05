@@ -8,7 +8,7 @@ class CustomUserAdmin(UserAdmin):
     and list its fieldsets
     """
     model = CustomUser
-    list_display = ['email', 'username', 'first_name', 'last_name', 'user_type', 'location','is_staff']
+    list_display = ['id','email', 'username', 'first_name', 'last_name', 'phone_number',  'location', 'user_type','is_staff']
 
     fieldsets = (
         (None, {'fields': ('email', 'password')}),

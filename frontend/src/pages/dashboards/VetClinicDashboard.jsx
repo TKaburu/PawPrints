@@ -66,8 +66,8 @@ const VetClinicDashboard = () => {
                                         <p>Type of pet: {pet.type_of_pet}</p>
                                         <p>Breed: {pet.breed}</p>
                                         <p>Age: {pet.age} years old</p>
-                                        <p>Owner: {pet.pet_parent.username}</p>
-                                        <p>Owners Contact: {pet.pet_parent_contact}</p>
+                                        <p>Owner: {pet.pet_parent_first_name} {pet.pet_parent_last_name}</p>
+                                        <p>Owner's Contact: {pet.pet_parent_contact}</p>
                                     </section>
                                 ))}
                             </section>

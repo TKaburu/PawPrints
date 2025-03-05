@@ -65,7 +65,7 @@ class PetsListView(generics.ListAPIView):
     """
     API view to list all pets in the database.
     """
-    queryset = Pet.objects.all()
+    queryset = Pet.objects.all().select_related('pet_parent')
     serializer_class = PetSerializer
     permission_classes = [IsAuthenticated]
 
