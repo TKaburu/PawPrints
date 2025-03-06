@@ -12,7 +12,7 @@ const RegisterPet = () => {
   const [vetClinics, setVetClinics] = useState([]);
   const [primaryVet, setPrimaryVet] = useState('');
   const [primaryVetContact, setPrimaryVetContact] = useState('');
-  const [error, setError] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
 
@@ -44,14 +44,16 @@ const RegisterPet = () => {
   const handleVetChange = (e) => {
     const vetId = e.target.value;
     setPrimaryVet(vetId); // Update the selected vet id
-
-    // Find the clinic by id and set its contact number in the vet contact field
-    const selectedVet = vetClinics.find(
-      (clinic) => clinic.id === vetId
-    );
-
+  
+    // Ensure vet clinics are loaded before trying to find the selected vet
+    if (vetClinics.length === 0) {
+      return;
+    }
+  
+    const selectedVet = vetClinics.find((clinic) => String(clinic.id) === String(vetId));
+  
     if (selectedVet) {
-      setPrimaryVetContact(selectedVet.phone_number); // Update the vet contact number
+      setPrimaryVetContact(selectedVet.phone_number); // Automatically update the vet contact number
     }
   };
 
@@ -72,9 +74,9 @@ const RegisterPet = () => {
     };
 
     try {
-      const response = await api.post('/api/register-a-pet/', petData);
+      await api.post('/api/register-a-pet/', petData);
       setSuccessMessage('Pet registered successfully');
-      setError('');
+      setErrorMessage('');
       navigate('/dashboard/pet-owner/:username');
     } catch (error) {
       if (error.response) {
@@ -176,6 +178,9 @@ const RegisterPet = () => {
         </select>
 
         <label>Vet Contact:</label>
+        <p style={{ fontSize: '14px', marginTop: '10px' }}>
+          Confirm your vet clinic's number below
+        </p>
         <input
           className="form-input"
           type="text"
