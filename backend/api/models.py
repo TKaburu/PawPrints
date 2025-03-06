@@ -41,6 +41,11 @@ class Pet(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def get_transfer_status(self):
+        # Check if there is a pending transfer for this pet
+        transfer_request = TransferRequest.objects.filter(pet=self, status='pending').first()
+        return transfer_request.status if transfer_request else 'none'
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.pet_name)
@@ -48,3 +53,45 @@ class Pet(models.Model):
 
     def __str__(self):
         return self.pet_name
+    
+
+class TransferRequest(models.Model):
+    """
+    This class defines a transfer request model.
+    """
+
+    STATUS = (
+        ('pending', 'pending'),
+        ('approved', 'approved'),
+        ('rejected', 'rejected'),
+    )
+
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE)
+    current_owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="current_owner")
+    new_owner_email = models.EmailField()
+    status = models.CharField(max_length=20, choices=STATUS, default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Transfer Request for {self.pet.pet_name} - {self.status}"
+    
+    def save(self, *args, **kwargs):
+        # Check if this is an existing object being updated to 'approved'
+        if self.pk and self.status == 'approved':
+            # Get the previous state of the object
+            old_obj = TransferRequest.objects.get(pk=self.pk)
+            
+            # If status changed from 'pending' to 'approved'
+            if old_obj.status != 'approved':
+                try:
+                    # Find the new owner by email
+                    new_owner = CustomUser.objects.get(email=self.new_owner_email)
+                    
+                    # Update the pet's owner
+                    self.pet.pet_parent = new_owner
+                    self.pet.save()
+                except CustomUser.DoesNotExist:
+                    # If the new owner doesn't exist, revert to pending
+                    self.status = 'pending'
+        
+        super().save(*args, **kwargs)

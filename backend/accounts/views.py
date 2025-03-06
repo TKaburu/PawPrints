@@ -91,18 +91,22 @@ class VetClinicsListView(generics.ListAPIView):
 
 # -------------------------------------------- Dashboard Views --------------------------------------------
 
-class PetOwnerDashboardView(generics.ListAPIView):
+class PetOwnerDashboardView(APIView):
     """
-    Dashboard for the pet owner user
+    A dashboard for the pet owner user
     """
-    serializer_class = PetSerializer
     permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        username = self.kwargs['username']
-        user = get_object_or_404(CustomUser, username=username)
-        pets = Pet.objects.filter(pet_parent=user)
-        return pets
+    
+    def get(self, request, username):
+        # Check if the user is requesting their own dashboard
+        if request.user.username != username:
+            return Response({"detail": "Not authorized"}, status=status.HTTP_403_FORBIDDEN)
+        
+        # Get all pets where the current user is the pet_parent
+        pets = Pet.objects.filter(pet_parent=request.user)
+        serializer = PetSerializer(pets, many=True)
+        
+        return Response(serializer.data)
 
 class VetClinicDashboardView(generics.ListAPIView):
     """

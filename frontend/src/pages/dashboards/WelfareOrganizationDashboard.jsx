@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useCallback} from "react";
 import { Link } from "react-router-dom";
 import { ACCESS_TOKEN } from "../../constants";
 import api from "../../api/api";
@@ -19,6 +19,23 @@ const WelfareOrganizationDashboard = () => {
     const [transferError, setTransferError] = useState('');
     const [emailFormatError, setEmailFormatError] = useState('');
 
+    // Define fetchPets function using useCallback to memoize it
+    const fetchPets = useCallback(async () => {
+        if (!username) return; // Make sure username is available
+        
+        try {
+            const token = localStorage.getItem(ACCESS_TOKEN);
+            const response = await api.get(`accounts/dashboard/welfare-organization/${username}/`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+            setPets(Array.isArray(response.data) ? response.data : []);
+        } catch (error) {
+            setError('Failed to fetch pets');
+        }
+    }, [username]); // Add username as dependency for useCallback
+
     useEffect(() => {
         const fetchUsername = async () => {
             try {
@@ -38,22 +55,9 @@ const WelfareOrganizationDashboard = () => {
 
     useEffect(() => {
         if (username) {
-            const fetchPets = async () => {
-                try {
-                    const response = await api.get(`accounts/dashboard/welfare-organization/${username}/`, {
-                        headers: {
-                            'Authorization': `Bearer ${localStorage.getItem(ACCESS_TOKEN)}`,
-                        },
-                    });
-                    setPets(response.data);
-                } catch (error) {
-                    setError('Failed to fetch pets');
-                }
-            };
-
             fetchPets();
         }
-    }, [username]);
+    }, [username, fetchPets]); // Add fetchPets to the dependency array
 
     useEffect(() => {
         const fetchVetClinics = async () => {
@@ -87,12 +91,12 @@ const WelfareOrganizationDashboard = () => {
     const handleTransferClick = (pet) => {
         setSelectedPet(pet);
         setShowTransferModal(true);
-      };
+    };
     
-      const handleDeleteClick = (pet) => {
+    const handleDeleteClick = (pet) => {
         setPetToDelete(pet);
         setShowDeleteModal(true);
-      };
+    };
 
     return (
         <section className="main-container">
@@ -133,8 +137,6 @@ const WelfareOrganizationDashboard = () => {
                                             </>
                                             )}
                                         </section>
-
-
                                     </section>
                                 ))}
                             </section>

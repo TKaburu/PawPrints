@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../../api/api';
-import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../constants';
 
 const PetOwnerRegisterForm = () => {
   const [email, setEmail] = useState('');
@@ -27,7 +26,7 @@ const PetOwnerRegisterForm = () => {
     }
 
     try {
-      const response = await api.post('/accounts/register/', {
+      await api.post('/accounts/register/', {
         email,
         username,
         password,

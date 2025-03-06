@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { ACCESS_TOKEN } from "../../constants";
 import api from "../../api/api";
@@ -14,10 +14,11 @@ const PetOwnerDashboard = () => {
   const [showTransferModal, setShowTransferModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [vetClinics, setVetClinics] = useState({});
+  const [clinicsLocation, setClinicsLocation] = useState({});
   const [isDeleteModalOpen, setShowDeleteModal] = useState(false);
   const [petToDelete, setPetToDelete] = useState(null);
-  const [transferError, setTransferError] = useState(''); // Add transferError state
-  const [emailFormatError, setEmailFormatError] = useState(''); // Add emailFormatError state
+  const [transferError, setTransferError] = useState('');
+  const [emailFormatError, setEmailFormatError] = useState('');
 
   useEffect(() => {
     const fetchUsername = async () => {
@@ -51,6 +52,12 @@ const PetOwnerDashboard = () => {
           return acc;
         }, {});
         setVetClinics(clinics);
+
+        const clinicsLocation = response.data.reduce((acc, clinic) => {
+          acc[clinic.id] = clinic.location;
+          return acc;
+        }, {});
+        setClinicsLocation(clinicsLocation);
       } catch (error) {
         console.error('Failed to fetch vet clinics:', error);
       }
@@ -59,25 +66,28 @@ const PetOwnerDashboard = () => {
     fetchVetClinics();
   }, []);
 
-  useEffect(() => {
-    if (username) {
-      const fetchPets = async () => {
-        try {
-          const token = localStorage.getItem(ACCESS_TOKEN);
-          const response = await api.get(`accounts/dashboard/pet-owner/${username}/`, {
-            headers: {
-              'Authorization': `Bearer ${token}`,
-            },
-          });
-          setPets(response.data);
-        } catch (error) {
-          setError('Failed to fetch pets');
-        }
-      };
-
-      fetchPets();
+  const fetchPets = useCallback(async () => {
+    if (!username) return; // Make sure username is available
+    
+    try {
+      const token = localStorage.getItem(ACCESS_TOKEN);
+      const response = await api.get(`accounts/dashboard/pet-owner/${username}/`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      // Ensure pets is always an array
+      setPets(Array.isArray(response.data) ? response.data : []);
+    } catch (error) {
+      setError('Failed to fetch pets');
     }
   }, [username]);
+
+  useEffect(() => {
+    if (username) {
+      fetchPets();
+    }
+  }, [username, fetchPets]); // Add fetchPets as a dependency here
 
   const handleTransferClick = (pet) => {
     setSelectedPet(pet);
@@ -95,7 +105,7 @@ const PetOwnerDashboard = () => {
         <section className="pet-list">
           {error && <p>{error}</p>}
           {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
-          {pets.length === 0 ? (
+          {Array.isArray(pets) && pets.length === 0 ? (
             <section className="title">
               <h1>You have no pets. <span><Link to={`/register-pet`}>Register one</Link></span> today!</h1>
             </section>
@@ -105,20 +115,33 @@ const PetOwnerDashboard = () => {
                 <h1>Here are your fur babies</h1>
               </section>
               <div className="pet-cards-grid">
-                {pets.map((pet) => (
+                {pets?.map((pet) => (
                   <section key={pet.id} className="pet-card">
                     <h2>{pet.pet_name}</h2>
+                    {pet.transfer_status === 'pending' && (
+                      <p style={{ color: 'orange', fontWeight: 'bold', textAlign: 'center' }}>
+                        Waiting for transfer approval
+                      </p>
+                    )}
                     <p>Type of pet: {pet.type_of_pet}</p>
                     <p>Breed: {pet.breed}</p>
-                    <p>Age: {pet.age} years old</p>
+                    <p>Age: {pet.age} {pet.age === 1 ? 'year' : 'years'} old</p>
                     <p>Vet Clinic: {vetClinics[pet.primary_vet]}</p>
                     <p>Clinics Contact: {pet.primary_vet_contact}</p>
+                    <p>Clinic's Location: {clinicsLocation[pet.primary_vet]}</p>
+
                     <section className="double-buttons">
-                      <Link to={`/edit-pet-info/${pet.slug}`}>
-                        <button>Edit Pet</button>
-                      </Link>
-                      <button onClick={() => handleTransferClick(pet)}>Transfer Ownership</button>
-                      <button onClick={() => handleDeleteClick(pet)}>Delete</button>
+                      {pet.transfer_status !== 'pending' && (
+                        <>
+                          <Link to={`/edit-pet-info/${pet.slug}`}>
+                            <button>Edit Pet</button>
+                          </Link>
+                          <button onClick={() => handleTransferClick(pet)}>
+                            Transfer Ownership
+                          </button>
+                          <button onClick={() => handleDeleteClick(pet)}>Delete</button>
+                        </>
+                      )}
                     </section>
                   </section>
                 ))}
@@ -137,10 +160,11 @@ const PetOwnerDashboard = () => {
           setSuccessMessage={setSuccessMessage}
           setPets={setPets}
           pets={pets}
-          transferError={transferError} // Pass transferError
-          setTransferError={setTransferError} // Pass setTransferError
-          emailFormatError={emailFormatError} // Pass emailFormatError
-          setEmailFormatError={setEmailFormatError} // Pass setEmailFormatError
+          transferError={transferError}
+          setTransferError={setTransferError}
+          emailFormatError={emailFormatError}
+          setEmailFormatError={setEmailFormatError}
+          fetchPets={fetchPets}
         />
       )}
 

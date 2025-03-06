@@ -25,6 +25,7 @@ const RegisterPet = () => {
         setPetParentContact(userContact);  // Set pet parent contact field
       } catch (err) {
         console.error("Error fetching user info:", err);
+        setErrorMessage("Failed to fetch user details.");
       }
     };
 
@@ -34,6 +35,7 @@ const RegisterPet = () => {
         setVetClinics(response.data);
       } catch (err) {
         console.error("Error fetching vet clinics:", err);
+        setErrorMessage("Failed to fetch vet clinics.");
       }
     };
 
@@ -81,18 +83,32 @@ const RegisterPet = () => {
     } catch (error) {
       if (error.response) {
         console.error('Error response:', error.response.data);
+        setErrorMessage(error.response.data.message || 'Failed to register pet');
       } else {
         console.error('Error', error.message);
+        setErrorMessage('Failed to register pet. Please try again.');
       }
     }
   };
 
   return (
     <div className="main-container">
-      <form onSubmit={handleSubmit}>
+      <form className='auth-form' onSubmit={handleSubmit}>
         <section className="title">
           <h1>Register a pet</h1>
         </section>
+
+        {errorMessage && (
+          <div className="error-message" style={{ color: 'red', marginBottom: '10px' }}>
+            {errorMessage}
+          </div>
+        )}
+        
+        {successMessage && (
+          <div className="success-message" style={{ color: 'green', marginBottom: '10px' }}>
+            {successMessage}
+          </div>
+        )}
 
         <label>Pet Name:</label>
         <input

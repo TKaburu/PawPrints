@@ -19,4 +19,5 @@ urlpatterns = [
     
     path('pet/<int:pet_id>/transfer-ownership/', TransferPetOwnership.as_view(), name='transfer_pet_ownership'),
     path('check-microchip/<str:microchip_no>/', CheckMicrochipExistsView.as_view(), name='check_microchip_exists'),
+    path('pet/<int:pet_id>/transfer-request/', RequestTransferOwnership.as_view(), name='transfer_request'),
 ]
