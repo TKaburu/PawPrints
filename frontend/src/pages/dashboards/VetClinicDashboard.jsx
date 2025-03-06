@@ -65,7 +65,7 @@ const VetClinicDashboard = () => {
                                         <h2>{pet.pet_name}</h2>
                                         <p>Type of pet: {pet.type_of_pet}</p>
                                         <p>Breed: {pet.breed}</p>
-                                        <p>Age: {pet.age} years old</p>
+                                        <p>Age: {pet.age} {pet.age === 1 ? 'year' : 'years'} old</p>
                                         <p>Owner: {pet.pet_parent_first_name} {pet.pet_parent_last_name}</p>
                                         <p>Owner's Contact: {pet.pet_parent_contact}</p>
                                     </section>
