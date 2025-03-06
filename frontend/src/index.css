@@ -143,6 +143,10 @@ button:hover {
   background-color: var(--accent-color-dark);
 }
 
+.auth-form {
+  margin-top: 5%;
+}
+
 /* Drop downs */
 .dropdown-menu {
   display: none;
