@@ -49,84 +49,84 @@ const PetOwnerRegisterForm = () => {
 
   return (
     <section className="main-container">
-      <section>
-      <form onSubmit={handleSubmit}>
-            <section className="title">
-                <h1>Register as Pet Owner</h1>
-            </section>
-            <div>
-                <label>First Name:</label>
-                <input 
-                  className='form-input'
-                  type="text"
-                  value={firstName} onChange={(e) => setFirstName(e.target.value)} 
-                  required 
-                />
-            </div>
+      <section className='auth-form'>
+        <form onSubmit={handleSubmit}>
+          <section className="title">
+              <h1>Register as Pet Owner</h1>
+          </section>
+          <div>
+              <label>First Name:</label>
+              <input 
+                className='form-input'
+                type="text"
+                value={firstName} onChange={(e) => setFirstName(e.target.value)} 
+                required 
+              />
+          </div>
 
-            <div>
-                <label>Last Name:</label>
-                <input 
-                  className='form-input'
-                  type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} 
-                  required 
-                />
-            </div>
+          <div>
+              <label>Last Name:</label>
+              <input 
+                className='form-input'
+                type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} 
+                required 
+              />
+          </div>
 
-            <div>
-                <label>Email:</label>
-                <input 
-                    className='form-input'
-                    type="email" 
-                    value={email} 
-                    onChange={(e) => setEmail(e.target.value)} 
-                    required 
-                />
-            </div>
+          <div>
+              <label>Email:</label>
+              <input 
+                  className='form-input'
+                  type="email" 
+                  value={email} 
+                  onChange={(e) => setEmail(e.target.value)} 
+                  required 
+              />
+          </div>
 
-            <div>
-                <label>Username:</label>
-                <input 
-                  className='form-input'
-                  type="text" value={username} onChange={(e) => setUsername(e.target.value)} 
-                  required 
+          <div>
+              <label>Username:</label>
+              <input 
+                className='form-input'
+                type="text" value={username} onChange={(e) => setUsername(e.target.value)} 
+                required 
+              />
+          </div>
+          
+          <div>
+              <label>Phone Number:</label>
+              <input 
+                className='form-input'
+                type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} 
+                required 
                 />
-            </div>
-            
-            <div>
-                <label>Phone Number:</label>
-                <input 
-                  className='form-input'
-                  type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} 
-                  required 
-                  />
-            </div>
+          </div>
 
-            <div>
-                <label>Password:</label>
-                <input 
-                  className='form-input'
-                  type="password" value={password} onChange={(e) => setPassword(e.target.value)} 
-                  required 
-                />
-            </div>
+          <div>
+              <label>Password:</label>
+              <input 
+                className='form-input'
+                type="password" value={password} onChange={(e) => setPassword(e.target.value)} 
+                required 
+              />
+          </div>
 
-            <div>
-                <label>Confirm Password:</label>
-                <input 
-                  className='form-input'
-                  type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} 
-                  required 
-                />
-            </div>
-            <p>Already have an account?{' '}
-                <Link to="/login">
-                  Login
-                </Link>
-              </p>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
-            <button type="submit">Register</button>
+          <div>
+              <label>Confirm Password:</label>
+              <input 
+                className='form-input'
+                type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} 
+                required 
+              />
+          </div>
+          <p>Already have an account?{' '}
+              <Link to="/login">
+                Login
+              </Link>
+            </p>
+          {error && <p style={{ color: 'red' }}>{error}</p>}
+          {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+          <button type="submit">Register</button>
         </form>
       </section>
         
