@@ -51,7 +51,6 @@ const WelfareRegisterForm = () => {
                 <section className="title">
                     <h1>Register as Welfare Organization</h1>
                 </section>
-
                 <div>
                     <label>Email:</label>
                     <input 
