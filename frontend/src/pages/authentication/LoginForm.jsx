@@ -112,7 +112,7 @@ const LoginForm = () => {
                 <Link to="/register/vet-clinic" onClick={handleMouseLeave}>
                   Register as Vet Clinic
                 </Link>
-                <Link to="/register/welfare" onClick={handleMouseLeave}>
+                <Link to="/register/welfare-organization" onClick={handleMouseLeave}>
                   Register as Welfare
                 </Link>
               </div>
