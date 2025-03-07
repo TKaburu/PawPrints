@@ -29,9 +29,6 @@ const AboutPawPrints = () => {
                 <Link to="/register/pet-owner" onClick={handleMouseLeave}>
                   Register as Pet Owner
                 </Link>
-                <Link to="/register/vet" onClick={handleMouseLeave}>
-                  Register as Vet
-                </Link>
                 <Link to="/register/vet-clinic" onClick={handleMouseLeave}>
                   Register as Vet Clinic
                 </Link>
