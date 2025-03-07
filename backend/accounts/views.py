@@ -131,5 +131,5 @@ class WelfareOrganizationDashboardView(generics.ListAPIView):
     def get_queryset(self):
         username = self.kwargs['username']
         user = get_object_or_404(CustomUser, username=username)
-        pets = Pet.objects.all()
+        pets = Pet.objects.filter(pet_parent=user)
         return pets
