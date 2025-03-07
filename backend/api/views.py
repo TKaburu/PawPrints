@@ -258,6 +258,8 @@ class PetSearchView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )    
 
+
+
 class CheckMicrochipExistsView(APIView):
     """
     API View to check if a microchip number already exists in the Pet model.

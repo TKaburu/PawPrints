@@ -86,7 +86,7 @@ class VetClinicsListView(generics.ListAPIView):
     """
     queryset = CustomUser.objects.filter(user_type='vet_clinic')
     serializer_class = CustomUserSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     
 
 # -------------------------------------------- Dashboard Views --------------------------------------------

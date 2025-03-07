@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { searchPetByMicrochip } from "../../api/apiService";
-import { ACCESS_TOKEN } from "../../constants";
+// import { ACCESS_TOKEN } from "../../constants";
 import api from "../../api/api";
 import "../../styles/petSearch.css";
 
@@ -10,35 +10,41 @@ const PetSearch = () => {
   const [error, setError] = useState(null);
   const [searched, setSearched] = useState(false); // New state to track if search has been performed
   const [vetClinics, setVetClinics] = useState({});
+  const [clinicsLocation, setClinicsLocation] = useState({});
 
   useEffect(() => {
     const fetchVetClinics = async () => {
         try {
             const response = await api.get('accounts/vet-clinics/', {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem(ACCESS_TOKEN)}`,
-                },
             });
-            const clinics = response.data.reduce((acc, clinic) => {
-                acc[clinic.id] = clinic.username;
-                return acc;
-            }, {});
+            const clinics = {};
+            const locations = {};
+            
+            response.data.forEach(clinic => {
+                clinics[clinic.id] = clinic.username;
+                locations[clinic.id] = clinic.location || "Location not available";
+            });
+            
             setVetClinics(clinics);
+            setClinicsLocation(locations);
         } catch (error) {
             console.error('Failed to fetch vet clinics:', error);
         }
     };
 
     fetchVetClinics();
-  }, []);
-
-
+}, []);
 
   const handleSearch = async () => {
     setSearched(true); // Set searched to true when search is performed
 
     if (!microchipNo) {
       setError('Please enter a valid microchip number.');
+      return;
+    }
+
+    if (Object.keys(vetClinics).length === 0 || Object.keys(clinicsLocation).length === 0) {
+      setError('Vet clinics data is still loading, please try again later.');
       return;
     }
 
@@ -61,11 +67,11 @@ const PetSearch = () => {
   return (
     <section className="main-container">
       <section className="search-container">
-        <div className="title"> 
+        <div className="title">
           <h1>Search Pet By Microchip</h1>
         </div>
         <section className="description">
-          <p>Enter a microchip number down bellow to find the petowner</p>
+          <p>Enter a microchip number down below to find the pet owner</p>
         </section>
         <section className="search-bar">
           <input
@@ -78,16 +84,17 @@ const PetSearch = () => {
         <div className="search-btn">
           <button onClick={handleSearch}>Search</button>
         </div>
-        <p className="description">
-          <b>
-            Please contact the Vet Clinic to reunit the pet with the owner!
-          </b>
-        </p>
+        {/* <p className="description"> */}
+          {/* <b>Please contact the Vet Clinic to reunite the pet with the owner!</b> */}
+        {/* </p> */}
         <section className={`search-results ${searched ? "show-results" : ""}`}>
           {error && <p>{error}</p>}
           
           {result && (
             <div className="pet-results">
+              <p className="description">
+                <b>Please contact the Vet Clinic to reunite the pet with the owner!</b>
+              </p>
               <div className="title">
                 <h2>Pet Details</h2>
               </div>
@@ -96,10 +103,14 @@ const PetSearch = () => {
                   <div key={slug}>
                     <section className="pet-details">
                       <p>Name of the pet: <b>{pet.pet_name}</b></p>
-                      <p> {pet.pet_name}'s Vet Clinic: <b>{vetClinics[pet.primary_vet] }</b></p>
-                      <p>Clinics Contact: <b>{pet.primary_vet_contact}</b></p>
+                      <p>
+                        {pet.pet_name}'s Vet Clinic: <b>{vetClinics[pet.primary_vet] || "Unknown Clinic"}</b>
+                      </p>
+                      <p>Clinics Contact: <b>{pet.primary_vet_contact || "Unknown"}</b></p>
+                      <p>
+                        Clinic's Location: <b>{clinicsLocation[pet.primary_vet] || "Location not available"}</b>
+                      </p>
                     </section>
-
                   </div>
                 ))}
               </section>
@@ -107,7 +118,7 @@ const PetSearch = () => {
           )}
         </section>
       </section>
-    </section>   
+    </section>
   );
 };
 

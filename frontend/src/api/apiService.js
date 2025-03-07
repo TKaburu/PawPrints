@@ -11,7 +11,7 @@ export const searchPetByMicrochip = async (microchipNo) => {
         return response.data;
     } catch (error) {
         if (error.response && error.response.status === 404) {
-            return { error: 'No pet with this microchip number found.' };
+            return { error: 'No pet with that number found' }; // Match the exact error message
         }
         throw error;
     }
