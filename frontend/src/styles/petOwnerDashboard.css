@@ -9,6 +9,7 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  
 }
 
 /* The modal content container */
@@ -25,9 +26,17 @@
   margin-bottom: 20px;
 }
 
+.modal-content p {
+  margin-top: 20px;
+}
+
 .description {
   margin-bottom: 20px;
   color: var(--text-color);
+}
+
+.modal-content form {
+  width: 100%;
 }
 
 .modal-content input {

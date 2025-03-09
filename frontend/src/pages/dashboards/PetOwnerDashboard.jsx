@@ -87,7 +87,7 @@ const PetOwnerDashboard = () => {
     if (username) {
       fetchPets();
     }
-  }, [username, fetchPets]); // Add fetchPets as a dependency here
+  }, [username, fetchPets]);
 
   const handleTransferClick = (pet) => {
     setSelectedPet(pet);

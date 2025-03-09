@@ -9,9 +9,9 @@ const HomeLogin = () => {
           <h1>Login</h1>
       </div>
       <p className='description'>Are you a vet or a welfare organization? Log in bellow</p>
-      <section className="double-btn">
-        <Link><button className="btn">Vet Clinic</button></Link>
-        <Link><button className="btn">Welfare</button></Link>
+      <section className="double-buttons">
+        <Link to='/login'><button className="save-btn">Vet Clinic</button></Link>
+        <Link to='/login'><button className="cancel-btnn">Welfare</button></Link>
       </section>
     </section>
   )
