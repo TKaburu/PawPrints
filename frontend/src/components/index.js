@@ -13,5 +13,6 @@ export {default as Footer} from './Footer';
 
 // ------------------------------- other Components ------------------------------- #
 export {default as Loading} from './Loading';
+// export {default as Notification} from './Notification';
 
 

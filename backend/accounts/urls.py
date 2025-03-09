@@ -11,12 +11,19 @@ urlpatterns = [
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
+    # ------------------------------------------------------------- Pasword resest -------------------------------------------------------------
+    path('forgot-password/', ForgotPasswordView.as_view(), name='forgot-password'),
+    path('reset-password/<uidb64>/<token>/', ResetPasswordView.as_view(), name='password-reset'),
+    path('accounts/validate-reset-token/<str:uidb64>/<str:token>/', ValidatePasswordResetTokenView.as_view(), name='validate_reset_token'),
+
     # ------------------------------------------------------------ User ------------------------------------------------------------
     path('get-all-users/', GetAllUsersView.as_view(), name='users'),
     path('user-details/', UserDetailView.as_view(), name='user-detail'),
     path('current-user-details/', GetCurrentUserView.as_view(), name='user'),
-
     path('users/check-pet-owner/', PetOwnerView.as_view(), name='check-pet-owner'),
+
+    
+
 
     path('vet-clinics/', VetClinicsListView.as_view(), name='vet-clinics'),
 

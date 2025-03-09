@@ -8,6 +8,8 @@ export { default as VetClinicRegisterForm } from './authentication/VetClinicRegi
 export { default as WelfareRegisterForm } from './authentication/WelfareRegisterForm';
 
 export { default as LoginForm } from './authentication/LoginForm';
+export { default as ForgotPassword } from './authentication/ForgotPassword';
+export { default as ResetPassword } from './authentication/ResetPassword';
 
 // ------------------------------- Pet Pages ------------------------------- #
 export { default as PetSearch } from './petpages/PetSearch';

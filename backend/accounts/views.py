@@ -1,4 +1,10 @@
+from django.core.mail import send_mail
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.tokens import default_token_generator
 from django.shortcuts import render, get_object_or_404
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -87,7 +93,106 @@ class VetClinicsListView(generics.ListAPIView):
     queryset = CustomUser.objects.filter(user_type='vet_clinic')
     serializer_class = CustomUserSerializer
     permission_classes = [AllowAny]
+
+#--------------------------------------------- Reset Password ---------------------------------------------
+
+class ForgotPasswordView(APIView):
+    """	
+    Send a password reset link to the user's email address.
+    """
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        email = request.data.get('email')
+        try:
+            user = CustomUser.objects.get(email=email)
+        except CustomUser.DoesNotExist:
+            return Response({"error": "No account found with that email address."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Generate a password reset token
+        token = default_token_generator.make_token(user)
+
+        # Encode user id to include in the reset URL
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+
+        # Create reset URL for the frontend
+        reset_url = f'http://localhost:3000/reset-password/{uid}/{token}/'
+
+        # Send the email with reset link - using plain text instead of a template
+        email_subject = 'Password Reset Request'
+        email_message = f"""
+            Hello {user.username},
+
+            We received a request to reset your password. Click the link below to set a new password:
+
+            {reset_url}
+
+            If you didn't request this password reset, you can safely ignore this email.
+
+            The password reset link will expire in 24 hours.
+
+            This is an automated email, please do not reply.
+        """
+
+        send_mail(
+            email_subject,
+            email_message,
+            'no-reply@example.com',
+            [email],
+            fail_silently=False,
+        )
+
+        return Response({"message": "Password reset link sent."}, status=status.HTTP_200_OK)
     
+class ValidatePasswordResetTokenView(APIView):
+    """
+    API view to validate a password reset token before allowing a user to reset their password.
+    This prevents users from filling out the reset form only to find out the token is invalid after submission.
+    """
+    
+    def get(self, request, uidb64, token):
+        try:
+            # Decode the user id
+            uid = urlsafe_base64_decode(uidb64).decode()
+            user = CustomUser.objects.get(pk=uid)
+            
+            # Check if the token is valid
+            if default_token_generator.check_token(user, token):
+                return Response({"valid": True, "message": "Token is valid"}, status=status.HTTP_200_OK)
+            else:
+                return Response(
+                    {"valid": False, "error": "The password reset link has expired or is invalid."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+                
+        except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
+            return Response(
+                {"valid": False, "error": "Invalid user ID or token."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+    
+
+class ResetPasswordView(APIView):
+    """"
+    Reset the user's password.
+    """
+    permission_classes = [AllowAny]
+    def post(self, request, uidb64, token):
+        try:
+            uid = urlsafe_base64_decode(uidb64).decode('utf-8')
+            user = CustomUser.objects.get(id=uid)
+        except (TypeError, ValueError, CustomUser.DoesNotExist):
+            return Response({"error": "Invalid token or user not found."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if default_token_generator.check_token(user, token):
+            new_password = request.data.get('password')
+
+            # Hash the new password before saving
+            user.password = make_password(new_password)
+            user.save()
+
+            return Response({"message": "Password has been successfully reset."}, status=status.HTTP_200_OK)
+
 
 # -------------------------------------------- Dashboard Views --------------------------------------------
 

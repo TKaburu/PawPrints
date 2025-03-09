@@ -20,6 +20,8 @@ import {
   VetClinicRegisterForm,
   WelfareRegisterForm,
   LoginForm,
+  ForgotPassword,
+  ResetPassword,
   PetOwnerDashboard,
   VetClinicDashboard,
   WelfareOrganizationDashboard,
@@ -53,6 +55,9 @@ const Layout = () => {
           <Route path="/login" element={<LoginForm />} />
 
           <Route path="/logout" element={<Logout />} />
+
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
 
           <Route 
             path="/dashboard/pet-owner/:username" 
