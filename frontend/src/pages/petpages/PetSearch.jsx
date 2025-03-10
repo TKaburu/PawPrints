@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { searchPetByMicrochip } from "../../api/apiService";
-// import { ACCESS_TOKEN } from "../../constants";
 import api from "../../api/api";
 import "../../styles/petSearch.css";
 
@@ -9,32 +8,37 @@ const PetSearch = () => {
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const [searched, setSearched] = useState(false); // New state to track if search has been performed
-  const [vetClinics, setVetClinics] = useState({});
-  const [clinicsLocation, setClinicsLocation] = useState({});
+  const [vetClinics, setVetClinics] = useState({}); // Store vet clinic data
+  const [clinicsLocation, setClinicsLocation] = useState({}); // Store clinic locations
 
+  // Fetch vet clinic data
   useEffect(() => {
     const fetchVetClinics = async () => {
         try {
-            const response = await api.get('accounts/vet-clinics/', {
-            });
+            const response = await api.get('accounts/vet-clinics/');
             const clinics = {};
             const locations = {};
-            
-            response.data.forEach(clinic => {
-                clinics[clinic.id] = clinic.username;
-                locations[clinic.id] = clinic.location || "Location not available";
-            });
-            
+
+            // Check if response.data.results exists and is an array
+            if (response.data && Array.isArray(response.data.results)) {
+                response.data.results.forEach(clinic => {
+                    clinics[clinic.id] = clinic.username;
+                    locations[clinic.id] = clinic.location || "Location not available";
+                });
+            }
+
             setVetClinics(clinics);
             setClinicsLocation(locations);
         } catch (error) {
             console.error('Failed to fetch vet clinics:', error);
+            setError('Failed to fetch vet clinics');
         }
     };
 
     fetchVetClinics();
-}, []);
+  }, []);
 
+  // Handle search by microchip number
   const handleSearch = async () => {
     setSearched(true); // Set searched to true when search is performed
 
@@ -43,6 +47,7 @@ const PetSearch = () => {
       return;
     }
 
+    // Check if vet clinics data has been loaded
     if (Object.keys(vetClinics).length === 0 || Object.keys(clinicsLocation).length === 0) {
       setError('Vet clinics data is still loading, please try again later.');
       return;
@@ -50,7 +55,6 @@ const PetSearch = () => {
 
     try {
       const data = await searchPetByMicrochip(microchipNo);
-      console.log("API Response:", data);
       if (data.error) {
         setError(data.error);
         setResult(null);
@@ -71,7 +75,7 @@ const PetSearch = () => {
           <h1>Search Pet By Microchip</h1>
         </div>
         <section className="description">
-          <p>Enter a microchip number down below to find the pet owner</p>
+          <p>Enter a microchip number below to find the pet owner</p>
         </section>
         <section className="search-bar">
           <input
@@ -84,12 +88,10 @@ const PetSearch = () => {
         <div className="search-btn">
           <button onClick={handleSearch}>Search</button>
         </div>
-        {/* <p className="description"> */}
-          {/* <b>Please contact the Vet Clinic to reunite the pet with the owner!</b> */}
-        {/* </p> */}
+
         <section className={`search-results ${searched ? "show-results" : ""}`}>
           {error && <p>{error}</p>}
-          
+
           {result && (
             <div className="pet-results">
               <p className="description">
