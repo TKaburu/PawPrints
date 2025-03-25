@@ -53,7 +53,7 @@ const LoginForm = () => {
         } else if (userType === 'admin') {
           navigate('/admin-dashboard');
         }
-      }, 2000);
+      }, 1000);
     } catch (err) {
       showNotification('Invalid credentials. Please try again.', 'error');
     }
@@ -125,13 +125,12 @@ const LoginForm = () => {
                   </Link>
                 </div>
               )}
-
-              <div className="forgot-password-container">
-                <Link to="/forgot-password" className="forgot-password-link">
+            </div>
+            <div className="forgot-password-container">
+                <Link to="/forgot-password" className="forgot-password-link" >
                   Forgot Password?
                 </Link>
               </div>
-            </div>
             
             <button type="submit">Login</button>
           </form>
