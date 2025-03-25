@@ -32,10 +32,17 @@ const RegisterPet = () => {
     const fetchVetClinics = async () => {
       try {
         const response = await api.get('/accounts/vet-clinics/');
-        setVetClinics(response.data);
+
+        // Ensure we're setting an array
+        const clinicsData = Array.isArray(response.data) 
+          ? response.data 
+          : response.data.results || [];
+        
+        setVetClinics(clinicsData);
       } catch (err) {
         console.error("Error fetching vet clinics:", err);
         setErrorMessage("Failed to fetch vet clinics.");
+        setVetClinics([]); // Ensure it's an empty array
       }
     };
 
@@ -186,7 +193,7 @@ const RegisterPet = () => {
           <option value="" disabled>
             Select a Vet Clinic
           </option>
-          {vetClinics.map((clinic) => (
+          {Array.isArray(vetClinics) && vetClinics.map((clinic) => (
             <option key={clinic.id} value={clinic.id}>
               {clinic.username}
             </option>

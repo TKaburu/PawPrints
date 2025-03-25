@@ -4,6 +4,7 @@ import { ACCESS_TOKEN } from "../../constants";
 import api from "../../api/api";
 import TransferPetOwnership from '../petpages/TransferPetOwnership';
 import DeletePetModal from '../petpages/DeletePetModal';
+import Pagination from '../../components/Pagination'; // Import the Pagination component
 import '../../styles/petownerdashboard.css';
 
 const PetOwnerDashboard = () => {
@@ -19,6 +20,10 @@ const PetOwnerDashboard = () => {
   const [petToDelete, setPetToDelete] = useState(null);
   const [transferError, setTransferError] = useState('');
   const [emailFormatError, setEmailFormatError] = useState('');
+  // Pagination state
+  const [nextPage, setNextPage] = useState(null);
+  const [previousPage, setPreviousPage] = useState(null);
+  const [vetClinicsUrl, setVetClinicsUrl] = useState('accounts/vet-clinics/');
 
   useEffect(() => {
     const fetchUsername = async () => {
@@ -38,33 +43,60 @@ const PetOwnerDashboard = () => {
     fetchUsername();
   }, []);
 
-  useEffect(() => {
-    const fetchVetClinics = async () => {
-      try {
-        const token = localStorage.getItem(ACCESS_TOKEN);
-        const response = await api.get('accounts/vet-clinics/', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-        const clinics = response.data.reduce((acc, clinic) => {
-          acc[clinic.id] = clinic.username;
-          return acc;
-        }, {});
-        setVetClinics(clinics);
-
-        const clinicsLocation = response.data.reduce((acc, clinic) => {
-          acc[clinic.id] = clinic.location;
-          return acc;
-        }, {});
-        setClinicsLocation(clinicsLocation);
-      } catch (error) {
-        console.error('Failed to fetch vet clinics:', error);
-      }
-    };
-
-    fetchVetClinics();
+  const fetchVetClinics = useCallback(async (url = 'accounts/vet-clinics/') => {
+    try {
+      const token = localStorage.getItem(ACCESS_TOKEN);
+      const response = await api.get(url, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      
+      console.log('Vet clinics response:', response.data);
+      
+      // Handle paginated response
+      const clinicsArray = response.data.results || [];
+      
+      // Set pagination links
+      setNextPage(response.data.next);
+      setPreviousPage(response.data.previous);
+      
+      // Process clinic data
+      const clinics = clinicsArray.reduce((acc, clinic) => {
+        acc[clinic.id] = clinic.username;
+        return acc;
+      }, {});
+      
+      const locations = clinicsArray.reduce((acc, clinic) => {
+        acc[clinic.id] = clinic.location;
+        return acc;
+      }, {});
+      
+      // Update state with new data (merging with existing data)
+      setVetClinics(prevClinics => ({ ...prevClinics, ...clinics }));
+      setClinicsLocation(prevLocations => ({ ...prevLocations, ...locations }));
+    } catch (error) {
+      console.error('Failed to fetch vet clinics:', error);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchVetClinics();
+  }, [fetchVetClinics]);
+
+  const handlePageChange = useCallback((url) => {
+    if (url) {
+      // Extract the path from the full URL
+      const urlObj = new URL(url);
+      const path = urlObj.pathname + urlObj.search;
+      
+      // Remove the base URL to get just the endpoint
+      const endpoint = path.replace(/^\/api\//, '');
+      
+      fetchVetClinics(endpoint);
+      setVetClinicsUrl(endpoint);
+    }
+  }, [fetchVetClinics]);
 
   const fetchPets = useCallback(async () => {
     if (!username) return; // Make sure username is available
@@ -149,6 +181,15 @@ const PetOwnerDashboard = () => {
             </>
           )}
         </section>
+        
+        {/* Pagination control for vet clinics */}
+        <div className="vet-clinics-pagination">
+          <Pagination 
+            next={nextPage}
+            previous={previousPage}
+            onPageChange={handlePageChange}
+          />
+        </div>
       </section>
 
       {/* Transfer Modal */}

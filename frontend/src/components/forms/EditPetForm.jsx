@@ -30,9 +30,17 @@ const EditPetForm = () => {
                         'Authorization': `Bearer ${localStorage.getItem(ACCESS_TOKEN)}`,
                     },
                 });
-                setVetClinics(response.data);
+
+                // Ensure we're setting an array
+                const clinicsData = Array.isArray(response.data) 
+                    ? response.data 
+                    : response.data.results || [];
+                
+                setVetClinics(clinicsData);
             } catch (err) {
+                console.error('Failed to fetch vet clinics:', err);
                 setError('Failed to fetch vet clinics');
+                setVetClinics([]); // Reset the vet clinics to an empty array
             }
         };
         
@@ -53,7 +61,7 @@ const EditPetForm = () => {
             fetchVetClinics();
             fetchPetDetails();
         }
-    }, [slug]);  // Add slug as a dependency to the effect
+    }, [slug]);
 
     useEffect(() => {
         const fetchUsername = async () => {
@@ -185,7 +193,7 @@ const EditPetForm = () => {
                         required
                     >
                         <option value="" disabled>Select a Vet Clinic</option>
-                        {vetClinics.map((clinic) => (
+                        {Array.isArray(vetClinics) && vetClinics.map((clinic) => (
                             <option key={clinic.id} value={clinic.id}>
                                 {clinic.username}
                             </option>
