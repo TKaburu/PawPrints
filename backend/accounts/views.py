@@ -12,8 +12,8 @@ from rest_framework.views import APIView
 from .models import CustomUser
 from .serializers import *
 from api.models import Pet
+# from api.views import CustomPagination
 from api.serializers import *
-
 # -------------------------------------------- User Registration --------------------------------------------
 
 class RegisterView(generics.CreateAPIView):
@@ -90,9 +90,13 @@ class VetClinicsListView(generics.ListAPIView):
     """
     Get the details of all vet clinics.
     """
-    queryset = CustomUser.objects.filter(user_type='vet_clinic')
     serializer_class = CustomUserSerializer
     permission_classes = [AllowAny]
+    # pagination_class = CustomPagination
+    
+    def get_queryset(self):
+        # Make sure the queryset is ordered the same way as the pagination
+        return CustomUser.objects.filter(user_type='vet_clinic').order_by('-created_at', 'id')
 
 #--------------------------------------------- Reset Password ---------------------------------------------
 
@@ -223,8 +227,8 @@ class VetClinicDashboardView(generics.ListAPIView):
     def get_queryset(self):
         username = self.kwargs['username']
         user = get_object_or_404(CustomUser, username=username)
-        pets = Pet.objects.filter(primary_vet=user)
-        return pets
+        # Use created_at instead of created
+        return Pet.objects.filter(primary_vet_id=user.id).order_by('-created_at')
     
 class WelfareOrganizationDashboardView(generics.ListAPIView):
     """

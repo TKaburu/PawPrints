@@ -6,6 +6,7 @@ from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
+from rest_framework.pagination import CursorPagination
 from accounts.serializers import CustomUserSerializer
 from .models import *
 from .serializers import *
@@ -40,6 +41,14 @@ class RegisterPetView(APIView):
             serializer.save()  # Save the pet to the database
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+# class CustomPagination(CursorPagination):
+#     """
+#     Custom pagination class to set the page size and ordering.
+#     """
+#     page_size = 9
+#     ordering = ('-created_at', 'id')
+
 
 class PetsListView(generics.ListAPIView):
     """
@@ -48,6 +57,7 @@ class PetsListView(generics.ListAPIView):
     queryset = Pet.objects.all().select_related('pet_parent')
     serializer_class = PetSerializer
     permission_classes = [IsAuthenticated]
+    # pagination_class = CustomPagination
 
 class PetDetailsView(generics.RetrieveAPIView):
     """
