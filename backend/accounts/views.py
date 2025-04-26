@@ -96,6 +96,18 @@ class UserProfileView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+    def delete(self, request, username):
+        """
+        Delete the profile of a user by username.
+        """
+        user = get_object_or_404(CustomUser, username=username)
+        if request.user.username != username:
+            return Response({'detail': 'You do not have permission to delete this profile.'}, status=status.HTTP_403_FORBIDDEN)
+        
+        # Delete the user and their related pets (if any)
+        user.delete()
+        return Response({'detail': 'Profile deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
+    
 class PetOwnerView(APIView):
     """
     This view checks if a user is a pet owner based on their email.

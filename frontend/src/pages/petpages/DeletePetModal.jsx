@@ -44,9 +44,8 @@ const DeletePetModal = ({
                 <section className="title">
                     <h1>Are you sure you want to delete {pet.pet_name}?</h1>
                 </section>
-                <section className="description">
-                    <p>Once you delete this pet, you will not be able to recover it.</p>
-                </section>
+                <p>Once you delete this pet, you will not be able to recover it.</p>
+                
                 <section className="double-buttons">
                     <button className="save-btn" onClick={handleDeleteClick}>Delete</button>
                     <button className="cancel-btn" onClick={handleCancelClick}>Cancel</button>
