@@ -61,7 +61,6 @@ const Navbar = () => {
       <section className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
         <a href="/">Home</a>
         <a href="/register-pet">Register a Pet</a>
-        <a href="/about">Change Ownership</a>
         <a href="/contact">Contact</a>
       </section>
       <section className={`links ${isMenuOpen ? 'open' : ''}`}>
@@ -83,6 +82,7 @@ const Navbar = () => {
                 {userType === 'welfare' && (
                   <Link to={`/dashboard/welfare-organization/${username}`}>Dashboard</Link>
                 )}
+                <Link to={`/user-profile/${username}`}>Profile</Link>
                 <Link to="/logout" onClick={handleLogout}>Logout</Link>
               </div>
             </div>

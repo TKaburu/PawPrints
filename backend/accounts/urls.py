@@ -17,6 +17,7 @@ urlpatterns = [
     path('accounts/validate-reset-token/<str:uidb64>/<str:token>/', ValidatePasswordResetTokenView.as_view(), name='validate_reset_token'),
 
     # ------------------------------------------------------------ User ------------------------------------------------------------
+    path('user-profile/<str:username>/', UserProfileView.as_view(), name='user-profile'),
     path('get-all-users/', GetAllUsersView.as_view(), name='users'),
     path('user-details/', UserDetailView.as_view(), name='user-detail'),
     path('current-user-details/', GetCurrentUserView.as_view(), name='user'),

@@ -63,6 +63,20 @@ class GetCurrentUserView(generics.RetrieveAPIView):
     def get_object(self):
         return self.request.user
     
+# -------------------------------------------- User Profile --------------------------------------------
+class UserProfileView(APIView):
+    """
+    Get or update the profile of the currently logged-in user.
+    """
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, username):
+        user = get_object_or_404(CustomUser, username=username)
+        serializer = CustomUserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
 class PetOwnerView(APIView):
     """
     This view checks if a user is a pet owner based on their email.
@@ -227,7 +241,6 @@ class VetClinicDashboardView(generics.ListAPIView):
     def get_queryset(self):
         username = self.kwargs['username']
         user = get_object_or_404(CustomUser, username=username)
-        # Use created_at instead of created
         return Pet.objects.filter(primary_vet_id=user.id).order_by('-created_at')
     
 class WelfareOrganizationDashboardView(generics.ListAPIView):
