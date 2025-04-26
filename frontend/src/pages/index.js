@@ -3,6 +3,7 @@ export { default as Home } from './home/Home';
 export { default as NotFound } from './notFound/NotFound';
 export { default as ContactPage } from './contact/ContactPage';
 // ------------------------------ Authentication Pages ------------------------------ #
+export { default as UserProfile } from './authentication/UserProfile';
 export { default as PetOwnerRegisterForm } from './authentication/PetOwnerRegisterForm';
 export { default as VetClinicRegisterForm } from './authentication/VetClinicRegisterForm';
 export { default as WelfareRegisterForm } from './authentication/WelfareRegisterForm';

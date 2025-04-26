@@ -73,9 +73,28 @@ class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, username):
+        """
+        Get the profile of a user by username.
+        """
         user = get_object_or_404(CustomUser, username=username)
         serializer = CustomUserSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def put(self, request, username):
+        """
+        Update the profile of a user by username.
+        """
+        user = get_object_or_404(CustomUser, username=username)
+
+        # Only allow a user to edit their own profile
+        if request.user.username != username:
+            return Response({'detail': 'You do not have permission to update this profile.'}, status=status.HTTP_403_FORBIDDEN)
+
+        serializer = CustomUserSerializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class PetOwnerView(APIView):
     """
