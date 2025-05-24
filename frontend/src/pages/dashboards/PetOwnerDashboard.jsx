@@ -83,9 +83,13 @@ const PetOwnerDashboard = () => {
     }
   }, []);
 
+  // useEffect to fetch vet clinics when vetClinicsUrl changes or on initial load
   useEffect(() => {
-    fetchVetClinics();
-  }, [fetchVetClinics]);
+    if (vetClinicsUrl) {
+      // Ensure URL is present before fetching
+      fetchVetClinics(vetClinicsUrl);
+    }
+  }, [vetClinicsUrl, fetchVetClinics]); // Depends on vetClinicsUrl and the memoized fetchVetClinics
 
   const handlePageChange = useCallback(
     (url) => {
@@ -97,11 +101,10 @@ const PetOwnerDashboard = () => {
         // Remove the base URL to get just the endpoint
         const endpoint = path.replace(/^\/api\//, "");
 
-        fetchVetClinics(endpoint);
-        setVetClinicsUrl(endpoint);
+        setVetClinicsUrl(endpoint); // Update the URL, which will trigger the useEffect above
       }
     },
-    [fetchVetClinics]
+    [] // setVetClinicsUrl is stable and doesn't need to be in dependencies. fetchVetClinics is no longer called here.
   );
 
   const fetchPets = useCallback(async () => {
