@@ -1,118 +1,148 @@
-import React, { useState } from 'react';
-import { useNavigate, Link} from 'react-router-dom';
-import api from '../../api/api';
-import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../constants';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import api from "../../api/api";
 
 const VetClinicRegisterForm = () => {
-  const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [location, setLocation] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [location, setLocation] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccessMessage('');
+    setError("");
+    setSuccessMessage("");
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       return;
     }
 
     try {
-      const response = await api.post('/accounts/register/', {
+      const response = await api.post("/accounts/register/", {
         email,
         username,
         password,
         confirm_password: confirmPassword,
-        user_type: 'vet_clinic',
+        user_type: "vet_clinic",
         location,
         phone_number: phoneNumber,
       });
 
-      setSuccessMessage('Registration successful! Redirecting to login...');
+      // Use a success message from the backend if available, otherwise use a default one.
+      const successMsg =
+        response.data?.message ||
+        response.data?.detail ||
+        "Registration successful! Redirecting to login...";
+      setSuccessMessage(successMsg);
+
       setTimeout(() => {
-        navigate('/login');
+        navigate("/login");
       }, 2000);
     } catch (err) {
-      setError('An error occurred. Please try again.');
+      // Attempt to extract more specific error messages from the backend response
+      if (err.response && err.response.data) {
+        const errorData = err.response.data;
+        // Common structure for DRF validation errors: { field_name: ["error message"] }
+        // Or a general error: { detail: "error message" } or { error: "error message" }
+        let errorMessage = "";
+        if (typeof errorData === "object" && errorData !== null) {
+          // Join multiple error messages if they exist (e.g., for different fields)
+          errorMessage = Object.values(errorData).flat().join(" ");
+        }
+        setError(errorMessage || "An error occurred. Please try again.");
+      } else {
+        // Fallback for network errors or unexpected issues
+        setError("An error occurred. Please try again.");
+      }
+      console.error("Registration error:", err.response || err);
     }
   };
 
   return (
-    <section className="main-container">
-        <section className="auth-form">
-            <form onSubmit={handleSubmit}>
-                <section className="title">
-                    <h1>Register as Vet Clinic</h1>
-                </section>
-                <div>
-                    <label>Email:</label>
-                    <input
-                        className='form-input'
-                        type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-                        required 
-                    />
-                </div>
-                <div>
-                    <label>Username:</label>
-                    <input 
-                        className='form-input'                        
-                        type="text" value={username} onChange={(e) => setUsername(e.target.value)} 
-                        required 
-                    />
-                </div>
+    <section className='main-container'>
+      <section className='auth-form'>
+        <form onSubmit={handleSubmit}>
+          <section className='title'>
+            <h1>Register as Vet Clinic</h1>
+          </section>
+          <div>
+            <label>Email:</label>
+            <input
+              className='form-input'
+              type='email'
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label>Username:</label>
+            <input
+              className='form-input'
+              type='text'
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
 
-                <div>
-                    <label>Location:</label>
-                    <input 
-                        className='form-input'
-                        type="text" value={location} onChange={(e) => setLocation(e.target.value)} 
-                        required 
-                    />
-                </div>
+          <div>
+            <label>Location:</label>
+            <input
+              className='form-input'
+              type='text'
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              required
+            />
+          </div>
 
-                <div>
-                    <label>Phone Number:</label>
-                    <input 
-                        className='form-input'
-                        type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} 
-                        required 
-                    />
-                </div>
+          <div>
+            <label>Phone Number:</label>
+            <input
+              className='form-input'
+              type='text'
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+              required
+            />
+          </div>
 
-                <div>
-                    <label>Password:</label>
-                    <input 
-                        className='form-input'
-                        type="password" value={password} onChange={(e) => setPassword(e.target.value)} 
-                        required 
-                    />
-                </div>
+          <div>
+            <label>Password:</label>
+            <input
+              className='form-input'
+              type='password'
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
 
-                <div>
-                    <label>Confirm Password:</label>
-                    <input 
-                        className='form-input'
-                        type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} 
-                        required 
-                    />
-                </div>
-                <p>Already have an account?{' '}
-                    <Link to="/login">
-                        Login
-                    </Link>
-                </p>
-                {error && <p style={{ color: 'red' }}>{error}</p>}
-                {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
-                <button type="submit">Register</button>
-            </form>
-        </section>
+          <div>
+            <label>Confirm Password:</label>
+            <input
+              className='form-input'
+              type='password'
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </div>
+          <p>
+            Already have an account? <Link to='/login'>Login</Link>
+          </p>
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
+          <button type='submit'>Register</button>
+        </form>
+      </section>
     </section>
   );
 };
